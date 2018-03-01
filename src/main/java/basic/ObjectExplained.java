@@ -9,7 +9,7 @@ import com.google.common.collect.ComparisonChain;
  * @author yuxuan
  * @create 2018-02-28 下午9:08
  **/
-public class ObjectMethods {
+public class ObjectExplained {
     /**
      * 使用Objects.equal帮助执行null敏感的equals判断，从而避免抛出NullPointerException
      * 注意：JDK7引入的Objects类提供了一样的方法Objects.equals
@@ -85,8 +85,8 @@ public class ObjectMethods {
     public static void main(String args[]) {
         equalsMethod();
         hashCodeMethod();
-        new ObjectMethods().toStringHelperMethod();
-        new ObjectMethods().compare();
+        new ObjectExplained().toStringHelperMethod();
+        new ObjectExplained().compare();
     }
 
 }
