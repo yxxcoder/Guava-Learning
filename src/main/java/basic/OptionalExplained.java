@@ -1,4 +1,4 @@
-package basic.using_and_avoiding_null;
+package basic;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;

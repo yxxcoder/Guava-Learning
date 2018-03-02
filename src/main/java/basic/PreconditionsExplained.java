@@ -1,4 +1,4 @@
-package basic.preconditions;
+package basic;
 
 import static com.google.common.base.Preconditions.*;
 
