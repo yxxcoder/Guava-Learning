@@ -64,6 +64,26 @@ public class OrderingExplained {
         System.out.println("reverseOrdering:"+ reverseOrdering.sortedCopy(list));
     }
 
+    /**
+     * 运用排序器
+     * Guava的排序器实现有若干操纵集合或元素值的方法
+     */
+    public static void applicationMethod() {
+        List<String> list = Lists.newArrayList();
+        list.add("peida");
+        list.add("jerry");
+        list.add("harry");
+        list.add("eva");
+        list.add("jhon");
+        list.add(null);
+        System.out.println("list:"+ list);
+
+        // 对可排序类型做自然排序，如数字按大小，日期按先后排序
+        Ordering<String> naturalOrdering = natural();
+
+        naturalOrdering.greatestOf();
+    }
+
     public static void main(String args[]) {
         creationMethod();
         chainingMethod();
