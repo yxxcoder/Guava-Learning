@@ -1,4 +1,4 @@
-package basic;
+package basic.optional;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
