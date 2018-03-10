@@ -1,8 +1,8 @@
 package basic.ordering;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
+import com.google.common.primitives.Ints;
 
 import java.util.Comparator;
 import java.util.List;
@@ -17,32 +17,13 @@ import static com.google.common.collect.Ordering.usingToString;
  **/
 public class OrderingExplained {
 
-    class People {
-        public String name;
-        public int age;
-
-        People(String name, int age) {
-            this.name = name;
-            this.age = age;
-        }
-
-        @Override
-        public String toString() {
-            return MoreObjects
-                    .toStringHelper(this)
-                    .add("name", name)
-                    .add("age", age)
-                    .toString();
-        }
-    }
-
-    List<People> list = Lists.newArrayList(
+    static List<People> peopleList = Lists.newArrayList(
             new People("peter", 8),
             new People("jerry", 9),
             new People("harry", 10),
             new People("eva", 11),
-            new People("jerry", 12),
-            new People("jerry", 12));
+            new People("vermouth", 12),
+            new People("jetty", 12));
 
     /**
      * 常见的排序器可以由下面的静态方法创建
@@ -68,10 +49,17 @@ public class OrderingExplained {
                 return o1.hashCode() - o2.hashCode() ;
             }
         });
+        // 直接继承Ordering
+        Ordering<String> byLengthOrdering = new Ordering<String>() {
+            public int compare(String left, String right) {
+                return Ints.compare(left.length(), right.length());
+            }
+        };
 
         System.out.println("naturalOrdering:"+ naturalOrdering.sortedCopy(list));
         System.out.println("usingToStringOrdering:"+ usingToStringOrdering.sortedCopy(list));
         System.out.println("fromOrdering:"+ fromOrdering.sortedCopy(list));
+        System.out.println("byLengthOrdering:"+ byLengthOrdering.sortedCopy(list));
 
     }
 
@@ -96,13 +84,12 @@ public class OrderingExplained {
         natural().nullsFirst();
         // 使用当前排序器，但额外把null值排到最后面
         natural().nullsLast();
-
-//        natural().compound(new PeopleAgeComparator());
-
-
+        // 合成另一个比较器，以处理当前排序器中的相等情况
+        Ordering<People> secondaryOrdering = new PeopleAgeOrder().compound(new PeopleNameLengthOrder());
 
         System.out.println("naturalOrdering:"+ naturalOrdering.sortedCopy(list));
         System.out.println("reverseOrdering:"+ reverseOrdering.sortedCopy(list));
+        System.out.println("secondaryOrdering:"+ secondaryOrdering.sortedCopy(peopleList));
     }
 
     /**
@@ -116,7 +103,6 @@ public class OrderingExplained {
         list.add("harry");
         list.add("eva");
         list.add("john");
-        list.add(null);
         System.out.println("list:"+ list);
 
         // 对可排序类型做自然排序，如数字按大小，日期按先后排序
@@ -136,14 +122,7 @@ public class OrderingExplained {
     public static void main(String args[]) {
         creationMethod();
         chainingMethod();
+        applicationMethod();
 
-
-        Ordering<List<String>> ordering = new Ordering<List<String>>() {
-            @Override
-            public int compare(List<String> left, List<String> right) {
-                return 0;
-            }
-        };
-//        ordering.reverse().isOrdered(list);
     }
 }
