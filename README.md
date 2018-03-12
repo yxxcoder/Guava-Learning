@@ -13,6 +13,7 @@ null是模棱两可的，会引起令人困惑的错误，有些时候它让人�
 ### [1.3 常见Object方法](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/basic/object)
 简化Object方法实现，如hashCode()和toString()
 
-### [1.4 排序: Guava强大的”流畅风格比较器”]
+### [1.4 排序: Guava强大的”流畅风格比较器”](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/basic/ordering)
+排序器[Ordering]是Guava流畅风格比较器[Comparator]的实现，可以用来为构建复杂的比较器，以完成集合排序的功能
 
-### [1.5 Throwables：简化了异常和错误的传播与检查]
+### [1.5 Throwables：简化了异常和错误的传播与检查]()
