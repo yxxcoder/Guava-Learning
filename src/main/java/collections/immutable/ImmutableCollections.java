@@ -1,8 +1,6 @@
-package collections;
+package collections.immutable;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
+import com.google.common.collect.*;
 
 import java.awt.*;
 import java.util.Set;
@@ -37,4 +35,20 @@ public class ImmutableCollections {
                 .build();
 
     }
+
+    /**
+     *
+     */
+    public static void exampleMethod(){
+        ImmutableSet<String> colors = ImmutableSet.of("red", "orange", "yellow");
+
+        // ImmutableXXX.copyOf方法会尝试在安全的时候避免做拷贝
+        // 在这段代码中，ImmutableList.copyOf(foobar)会智能地直接返回foobar.asList()
+        // 它是一个ImmutableSet的常量时间复杂度的List视图
+        ImmutableList.copyOf(colors);
+
+        // 所有不可变集合都有一个asList()方法提供ImmutableList视图
+        ImmutableList immutableList = colors.asList();
+    }
+
 }
