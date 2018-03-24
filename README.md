@@ -16,4 +16,16 @@ null是模棱两可的，会引起令人困惑的错误，有些时候它让人�
 ### [1.4 排序: Guava强大的”流畅风格比较器”](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/basic/ordering)
 排序器[Ordering]是Guava流畅风格比较器[Comparator]的实现，可以用来为构建复杂的比较器，以完成集合排序的功能
 
-### [1.5 Throwables：简化了异常和错误的传播与检查]()
+### [1.5 Throwables：简化了异常和错误的传播与检查](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/basic/throwables)
+
+
+## 2. 集合 [Collections]
+Guava对JDK集合的扩展，这是Guava最成熟和为人所知的部分
+
+### [2.1 不可变集合](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/collections/immutable)
+用不变的集合进行防御性编程和性能提升
+
+### [2.2 新集合类型](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/collections/newcollection)
+multisets, multimaps, tables, bidirectional maps等
+
+
