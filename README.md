@@ -17,6 +17,7 @@ null是模棱两可的，会引起令人困惑的错误，有些时候它让人�
 排序器[Ordering]是Guava流畅风格比较器[Comparator]的实现，可以用来为构建复杂的比较器，以完成集合排序的功能
 
 ### [1.5 Throwables：简化了异常和错误的传播与检查](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/basic/throwables)
+简化了异常和错误的传播与检查
 
 
 ## 2. 集合 [Collections]
