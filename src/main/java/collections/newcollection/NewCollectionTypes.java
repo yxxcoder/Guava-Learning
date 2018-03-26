@@ -1,8 +1,8 @@
 package collections.newcollection;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.*;
+
+import java.util.Set;
 
 /**
  * 新集合类型
@@ -93,8 +93,43 @@ public class NewCollectionTypes {
 
     }
 
+
+    /**
+     * 实现键值对的双向映射的map
+     * 可以用 inverse()反转BiMap<K, V>的键值映射
+     * 保证值是唯一的，因此 values()返回Set而不是普通的Collection
+     *
+     * 键–值实现	        值–键实现	        对应的BiMap实现
+     * HashMap	        HashMap	        HashBiMap
+     * ImmutableMap	    ImmutableMap	ImmutableBiMap
+     * EnumMap	        EnumMap	        EnumBiMap
+     * EnumMap	        HashMap	        EnumHashBiMap
+     */
+    public static void biMap() {
+
+        BiMap<String, Integer> userId = HashBiMap.create();
+        userId.put("a", 123);
+
+        // 把键映射到已经存在的值，会抛出IllegalArgumentException异常
+        // userId.put("b", 123);
+
+        // 强制替换它的键
+        userId.forcePut("b", 123);
+        System.out.println(userId);
+
+        // 反转BiMap<K, V>的键值映射
+        System.out.println(userId.inverse().get(123));
+
+        // 保证值是唯一的，因此 values()返回Set而不是普通的Collection
+        Set<Integer> IdSet = userId.values();
+        System.out.println(IdSet);
+
+    }
+
+
     public static void main(String args[]) {
         multiset();
         multimap();
+        biMap();
     }
 }
