@@ -144,3 +144,5 @@ public static void classToInstanceMap() {
 
 }
 ```
+
+### 6. RangeSet
