@@ -146,3 +146,28 @@ public static void classToInstanceMap() {
 ```
 
 ### 6. RangeSet
+RangeSet描述了一组不相连的、非空的区间
+当把一个区间添加到可变的RangeSet时，所有相连的区间会被合并，空区间会被忽略
+
+```java
+public static void rangeSet() {
+    RangeSet<Integer> rangeSet = TreeRangeSet.create();
+
+    rangeSet.add(Range.closed(1, 10)); // {[1,10]}
+    System.out.println(rangeSet.toString());
+
+    rangeSet.add(Range.closedOpen(11, 15));//不相连区间:{[1,10], [11,15)}
+    System.out.println(rangeSet.toString());
+
+    rangeSet.add(Range.closedOpen(15, 20)); //相连区间; {[1,10], [11,20)}
+    System.out.println(rangeSet.toString());
+
+    rangeSet.add(Range.openClosed(0, 0)); //空区间; {[1,10], [11,20)}
+    System.out.println(rangeSet.toString());
+
+    rangeSet.remove(Range.open(5, 10)); //分割[1, 10]; {[1,5], [10,10], [11,20)}
+    System.out.println(rangeSet.toString());
+
+}
+```
+
