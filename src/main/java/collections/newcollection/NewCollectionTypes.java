@@ -203,6 +203,29 @@ public class NewCollectionTypes {
         rangeSet.remove(Range.open(5, 10)); //分割[1, 10]; {[1,5], [10,10], [11,20)}
         System.out.println(rangeSet.toString());
 
+        /**
+         * RangeSet的视图
+         */
+        // 返回RangeSet的补集视图
+        RangeSet<Integer> complementSet = rangeSet.complement();
+        System.out.println(complementSet.toString());
+
+        RangeSet<Integer> subRangeSet = rangeSet.subRangeSet(Range.closed(5, 8));
+        System.out.println(subRangeSet.toString());
+
+        Set<Range<Integer>> rangeSets = rangeSet.asRanges();
+        System.out.println(rangeSets.toString());
+
+        /**
+         * RangeSet的查询方法
+         */
+        // 判断RangeSet中是否有任何区间包含给定元素
+        Boolean contains = rangeSet.contains(8);
+        System.out.println(contains);
+
+        // 返回包含给定元素的区间；若没有这样的区间，则返回null
+        Range<Integer> rangeContaining = rangeSet.rangeContaining(new Integer(8));
+        System.out.println(rangeContaining);
     }
 
     public static void main(String args[]) {
