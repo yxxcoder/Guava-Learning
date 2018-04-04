@@ -226,6 +226,46 @@ public class NewCollectionTypes {
         // 返回包含给定元素的区间；若没有这样的区间，则返回null
         Range<Integer> rangeContaining = rangeSet.rangeContaining(new Integer(8));
         System.out.println(rangeContaining);
+
+        // 判断RangeSet中是否有任何区间包括给定区间
+        Boolean encloses = rangeSet.encloses(Range.closed(2, 3));
+        System.out.println(encloses);
+
+        // 返回包括RangeSet中所有区间的最小区间
+        Range<Integer> span = rangeSet.span();
+        System.out.println(span);
+
+    }
+
+    /**
+     * RangeMap描述了”不相交的、非空的区间”到特定值的映射
+     * 和RangeSet不同，RangeMap不会合并相邻的映射，即便相邻的区间映射到相同的值
+     */
+    public static void rangeMap() {
+        RangeMap<Integer, String> rangeMap = TreeRangeMap.create();
+
+        rangeMap.put(Range.closed(1, 10), "foo"); //{[1,10] => "foo"}
+        System.out.println(rangeMap.toString());
+
+        rangeMap.put(Range.open(3, 6), "bar"); //{[1,3] => "foo", (3,6) => "bar", [6,10] => "foo"}
+        System.out.println(rangeMap.toString());
+
+        rangeMap.put(Range.open(10, 20), "foo"); //{[1,3] => "foo", (3,6) => "bar", [6,10] => "foo", (10,20) => "foo"}
+        System.out.println(rangeMap.toString());
+
+        rangeMap.remove(Range.closed(5, 11)); //{[1,3] => "foo", (3,5) => "bar", (11,20) => "foo"}
+        System.out.println(rangeMap.toString());
+
+        /**
+         * RangeMap的视图
+         */
+        // 用Map<Range<K>, V>表现RangeMap。这可以用来遍历RangeMap
+        Map<Range<Integer>, String> mapOfRanges = rangeMap.asMapOfRanges();
+        System.out.println(mapOfRanges);
+
+        // 用RangeMap类型返回RangeMap与给定Range的交集视图
+        RangeMap<Integer, String> subRangeMap = rangeMap.subRangeMap(Range.open(12, 18));
+        System.out.println(subRangeMap);
     }
 
     public static void main(String args[]) {
@@ -235,5 +275,6 @@ public class NewCollectionTypes {
         table();
         classToInstanceMap();
         rangeSet();
+        rangeMap();
     }
 }
