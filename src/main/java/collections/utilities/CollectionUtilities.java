@@ -109,9 +109,71 @@ public class CollectionUtilities {
         // true
         System.out.println(contains);
 
+        boolean removeAll = Iterables.removeAll(numbers, Lists.newArrayList(6, 9));
+        // true
+        System.out.println(removeAll);
+        // [-1, 0, 1, 2, 3, 4, 5]
+        System.out.println(numbers);
+
+        numbers = Lists.newArrayList(-1, 0);
+        boolean retainAll = Iterables.retainAll(numbers, Lists.newArrayList(0));
+        // true
+        System.out.println(retainAll);
+        // [0]
+        System.out.println(numbers);
+
+        int size = Iterables.size(concatenated);
+        // 6
+        System.out.println(size);
+
+        Integer[] array = Iterables.toArray(concatenated, Integer.class);
+        // 1 2 3 4 5 6
+        for (Integer integer : array) {
+            System.out.print(integer + " ");
+        }
+        System.out.println();
+
+        boolean isEmpty = Iterables.isEmpty(Lists.newArrayList());
+        // true
+        System.out.println(isEmpty);
+
+        int one = Iterables.get(concatenated, 1);
+        // 2
+        System.out.println(one);
+
+        // [1, 2, 3, 4, 5, 6]
+        String str = Iterables.toString(concatenated);
+        System.out.println(str);
+
+    }
+
+    public static void lists() {
+
+        List countUp = Ints.asList(1, 2, 3, 4, 5);
+
+        List countDown = Lists.reverse(countUp);
+        // {5, 4, 3, 2, 1}
+        System.out.println(countDown);
+
+
+        List<List> parts = Lists.partition(countUp, 2);
+        // {{1,2}, {3,4}, {5}}
+        System.out.println(countDown);
+
+        List list1 = Lists.newArrayList();
+        List list2 = Lists.newArrayList(1, 2);
+        List list3 = Lists.newArrayList(Iterables.concat());
+        List list4 = Lists.newArrayList(Ints.asList(1).iterator());
+        // 分配一个容量为10的数组
+        List list5 = Lists.newArrayListWithCapacity(10);
+        //
+        List list6 = Lists.newArrayListWithExpectedSize(10);
+
     }
 
     public static void main(String[] args) {
         iterable();
+        lists();
     }
+
 }
