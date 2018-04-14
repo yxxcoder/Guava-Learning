@@ -4,9 +4,7 @@ package collections.utilities;
 import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 强大的集合工具类：java.util.Collections中未包含的集合工具
@@ -38,6 +36,9 @@ public class CollectionUtilities {
 
     }
 
+    /**
+     * Iterables工具类
+     */
     public static void iterable() {
         /**
          * 常规方法
@@ -147,6 +148,9 @@ public class CollectionUtilities {
 
     }
 
+    /**
+     * Lists工具类
+     */
     public static void lists() {
 
         List countUp = Ints.asList(1, 2, 3, 4, 5);
@@ -160,20 +164,147 @@ public class CollectionUtilities {
         // {{1,2}, {3,4}, {5}}
         System.out.println(countDown);
 
+        /**
+         * Lists提供如下静态工厂方法
+         */
         List list1 = Lists.newArrayList();
         List list2 = Lists.newArrayList(1, 2);
         List list3 = Lists.newArrayList(Iterables.concat());
         List list4 = Lists.newArrayList(Ints.asList(1).iterator());
         // 分配一个容量为10的数组
         List list5 = Lists.newArrayListWithCapacity(10);
-        //
+        // 5L + arraySize + (arraySize / 10) = 16 分配一个容量为16的数组
         List list6 = Lists.newArrayListWithExpectedSize(10);
 
+        LinkedList<Integer> linkedList1 = Lists.newLinkedList();
+        LinkedList linkedList2 = Lists.newLinkedList(Iterables.concat());
+
+    }
+
+    /**
+     * Sets工具类
+     */
+    public static void sets() {
+
+        /**
+         * 集合运算方法
+         */
+
+        Set<String> wordsWithPrimeLength = ImmutableSet.of("one", "two", "three", "six", "seven", "eight");
+        Set<String> primes = ImmutableSet.of("two", "three", "five", "seven");
+
+        // 交集运算
+        Sets.SetView<String> intersection = Sets.intersection(primes, wordsWithPrimeLength);
+        // [two, three, seven]
+        System.out.println(intersection);
+
+        // 并集运算
+        Sets.SetView<String> union = Sets.union(primes, wordsWithPrimeLength);
+        // [two, three, five, seven, one, six, eight]
+        System.out.println(union);
+
+        // 差集运算
+        Sets.SetView<String> difference = Sets.difference(wordsWithPrimeLength, primes);
+        Sets.SetView<String> difference2 = Sets.difference(primes, wordsWithPrimeLength);
+        // [one, six, eight]
+        System.out.println(difference);
+        // [five]
+        System.out.println(difference2);
+
+        // 对称差运算
+        Sets.SetView<String> symmetricDifference = Sets.symmetricDifference(wordsWithPrimeLength, primes);
+        Sets.SetView<String> symmetricDifference2 = Sets.symmetricDifference(primes, wordsWithPrimeLength);
+        // [one, six, eight, five]
+        System.out.println(symmetricDifference);
+        // [five, one, six, eight]
+        System.out.println(symmetricDifference2);
+
+
+        Set<String> animals = ImmutableSet.of("gerbil", "hamster");
+        Set<String> fruits = ImmutableSet.of("apple", "orange", "banana");
+
+        // 返回所有集合的笛卡儿积
+        Set<List<String>> product = Sets.cartesianProduct(animals, fruits);
+        // [[gerbil, apple], [gerbil, orange], [gerbil, banana],
+        // [hamster, apple], [hamster, orange], [hamster, banana]]
+        System.out.println(product);
+
+        // 返回给定集合的所有子集
+        Set<Set<String>> animalSets = Sets.powerSet(animals);
+        // [] [gerbil] [hamster] [gerbil, hamster]
+        animalSets.forEach(v -> System.out.print(v + " "));
+        System.out.println();
+
+
+        /**
+         * SetView也实现了Set接口，可直接当作Set使用
+         */
+
+        // 对自己做不可变拷贝
+        ImmutableSet<String> immutableCopy = intersection.immutableCopy();
+        // [two, three, seven]
+        System.out.println(immutableCopy);
+
+        // 拷贝进另一个可变集合
+        Set<String> set = intersection.copyInto(Sets.newHashSet("one"));
+        // [seven, two, three, one]
+        System.out.println(set);
+
+
+        /**
+         * 静态工厂方法
+         */
+
+        /**
+         * HashSet
+         */
+        // basic
+        Set<Integer> hashSet1 = Sets.newHashSet();
+        // with elements
+        Set<Integer> hashSet2 = Sets.newHashSet(1, 2);
+        // from Iterable
+        Set<Integer> hashSet3 = Sets.newHashSet(Iterables.concat());
+        // from Iterator
+        Set<Integer> hashSet4 = Sets.newHashSet(Ints.asList().iterator());
+        // with expected size
+        Set<Integer> hashSet5 = Sets.newHashSetWithExpectedSize(10);
+
+        /**
+         * LinkedHashSet
+         */
+        // basic
+        Set<Integer> linkedHashSet1 = Sets.newLinkedHashSet();
+        // from Iterable
+        Set<Integer> linkedHashSet2 = Sets.newLinkedHashSet(Iterables.concat());
+        // with expected size
+        Set<Integer> linkedHashSet3 = Sets.newLinkedHashSetWithExpectedSize(10);
+
+        /**
+         * TreeSet
+         */
+        // basic
+        Set<Integer> treeSet1 = Sets.newTreeSet();
+        // from Iterable
+        Set<Integer> treeSet2 = Sets.newTreeSet(Iterables.concat());
+
+        // rom Iterable
+        Set<Integer> treeSet3 = Sets.newTreeSet(Comparator.comparingInt(o -> o));
+        treeSet3.addAll(Ints.asList(1, 2, 3));
+        // [1, 2, 3]
+        System.out.println(treeSet3);
+
+        treeSet3 = Sets.newTreeSet((o1, o2) -> o2 - o1);
+        treeSet3.addAll(Ints.asList(1, 2, 3));
+        // [3, 2, 1]
+        System.out.println(treeSet3);
     }
 
     public static void main(String[] args) {
         iterable();
         lists();
+        sets();
+
     }
+
 
 }
