@@ -1,6 +1,7 @@
 package collections.utilities;
 
 
+import com.google.common.base.Function;
 import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
 
@@ -299,10 +300,63 @@ public class CollectionUtilities {
         System.out.println(treeSet3);
     }
 
+    /**
+     * Maps工具类
+     */
+    public static void maps() {
+        /**
+         * uniqueIndex
+         * 通常针对的场景是：有一组对象，它们在某个属性上分别有独一无二的值，而我们希望能够按照这个属性值查找对象
+         */
+        // 比方说，我们有一堆字符串，这些字符串的长度都是独一无二的，而我们希望能够按照特定长度查找字符串
+        List<String> strings = Lists.newArrayList("aaa", "bb");
+        ImmutableMap<Integer, String> stringsByIndex = Maps.uniqueIndex(strings, new Function<String, Integer>() {
+            public Integer apply(String string) {
+                return string.length();
+            }
+        });
+
+        /**
+         * difference
+         * 用来比较两个Map以获取所有不同点
+         */
+        Map<String, Integer> left = ImmutableMap.of("a", 1, "b", 2, "c", 3);
+        Map<String, Integer> right = ImmutableMap.of("b", 2, "c", 4, "d", 5);
+        MapDifference<String, Integer> diff = Maps.difference(left, right);
+
+        // 两个Map中都有的映射项，包括匹配的键与值
+        Map<String, Integer> entriesInCommon = diff.entriesInCommon();
+        // {b=2}
+        System.out.println(entriesInCommon);
+
+        // 键相同但是值不同值映射项
+        Map<String, MapDifference.ValueDifference<Integer>> entriesDiffering = diff.entriesDiffering();
+        // {c=(3, 4)}
+        System.out.println(entriesDiffering);
+
+        // 键只存在于左边Map的映射项
+        Map<String, Integer> entriesOnlyOnLeft = diff.entriesOnlyOnLeft();
+        // {a=1}
+        System.out.println(entriesOnlyOnLeft);
+
+        // 键只存在于右边Map的映射项
+        Map<String, Integer> entriesOnlyOnRight = diff.entriesOnlyOnRight();
+        // {d=5}
+        System.out.println(entriesOnlyOnRight);
+
+        /**
+         * BiMap
+         * 既提供键到值的映射，也提供值到键的映射，是双向Map
+         */
+        // Maps.synchronizedBiMap();
+
+    }
+
     public static void main(String[] args) {
         iterable();
         lists();
         sets();
+        maps();
 
     }
 
