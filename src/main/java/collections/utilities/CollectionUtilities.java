@@ -5,7 +5,12 @@ import com.google.common.base.Function;
 import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
 
+import java.time.DayOfWeek;
 import java.util.*;
+import java.util.concurrent.ConcurrentMap;
+
+import static java.time.DayOfWeek.MONDAY;
+import static java.time.DayOfWeek.TUESDAY;
 
 /**
  * 强大的集合工具类：java.util.Collections中未包含的集合工具
@@ -345,11 +350,97 @@ public class CollectionUtilities {
         System.out.println(entriesOnlyOnRight);
 
         /**
-         * BiMap
-         * 既提供键到值的映射，也提供值到键的映射，是双向Map
+         * Maps类中处理BiMap的工具方法
+         * BiMap : 既提供键到值的映射，也提供值到键的映射，是双向Map
          */
-        // Maps.synchronizedBiMap();
+        BiMap<Integer, String> logfileMap = HashBiMap.create();
+        logfileMap.put(1,"a.log");
+        logfileMap.put(2,"b.log");
 
+        // 返回一个同步的（线程安全）的bimap，由给定的bimap支持
+        BiMap<Integer, String> synchronizedBiMap = Maps.synchronizedBiMap(logfileMap);
+
+        // 返回给定的bimap的不可修改的BiMap表示
+        BiMap<Integer, String> unmodifiableBiMap = Maps.unmodifiableBiMap(logfileMap);
+
+
+        /**
+         * Maps提供的静态工厂方法
+         */
+
+        /**
+         * HashMap
+         */
+        // basic
+        Map<String, String> hashMap1 = Maps.newHashMap();
+        // from Map
+        Map<String, String> hashMap2 = Maps.newHashMap(Maps.newHashMap());
+        // with expected size
+        Map<String, String> hashMap3 = Maps.newHashMapWithExpectedSize(10);
+
+        /**
+         * LinkedHashMap
+         */
+        // basic
+        Map<String, String> linkedHashMap1 = Maps.newLinkedHashMap();
+        // from Map
+        Map<String, String> linkedHashMap2 = Maps.newLinkedHashMap(Maps.newHashMap());
+
+        /**
+         * TreeMap
+         */
+        // basic
+        Map<String, String> treeMap1 = Maps.newTreeMap();
+        // from Comparator
+        Map<String, String> treeMap2 = Maps.newTreeMap(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o1.length() - o2.length();
+            }
+        });
+        // from SortedMap
+        Map<String, String> treeMap3 = Maps.newTreeMap(Maps.newTreeMap());
+
+        /**
+         * EnumMap
+         */
+        // from Class
+        Map<DayOfWeek, Integer> map =  Maps.newEnumMap(DayOfWeek.class);
+        map.put(MONDAY, 1);
+        // from Map
+        EnumMap enumMap = new EnumMap(ImmutableMap.of(MONDAY, 1));
+        enumMap.put(TUESDAY, 2);
+
+        /**
+         * ConcurrentMap
+         */
+        // basic
+        // 支持所有操作
+        ConcurrentMap<String, String> concurrentHashMap = Maps.newConcurrentMap();
+
+        /**
+         * IdentityHashMap
+         * 值可以重复的map
+         * 在IdentityHashMap中，是判断key是否为同一个对象，而不是普通HashMap的equals方式判断
+         */
+        // basic
+        IdentityHashMap<String, String> identityHashMap1 = Maps.newIdentityHashMap();
+        identityHashMap1.put(new String("yyy"), "1");
+        identityHashMap1.put(new String("yyy"), "2");
+        identityHashMap1.put(new String("xxx"), "3");
+        // {yyy=2, yyy=1, xxx=3}
+        System.out.println(identityHashMap1);
+
+        IdentityHashMap<String, String> identityHashMap2 = Maps.newIdentityHashMap();
+        identityHashMap2.put("yyy", "1");
+        identityHashMap2.put("yyy", "2");
+        identityHashMap2.put("xxx", "3");
+        // {xxx=3, yyy=2}
+        System.out.println(identityHashMap2);
+
+    }
+
+    public static void multisets() {
     }
 
     public static void main(String[] args) {
@@ -357,8 +448,11 @@ public class CollectionUtilities {
         lists();
         sets();
         maps();
+        multisets();
 
     }
+
+
 
 
 }
