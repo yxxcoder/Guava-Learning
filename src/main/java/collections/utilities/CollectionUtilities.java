@@ -440,7 +440,81 @@ public class CollectionUtilities {
 
     }
 
+    /**
+     * Multisets
+     */
     public static void multisets() {
+
+        /**
+         * Multisets提供了若干方法，以顾及Multiset元素的重复性
+         */
+        Multiset<String> multiset1 = HashMultiset.create();
+        multiset1.add("a", 2);
+        Multiset<String> multiset2 = HashMultiset.create();
+        multiset2.add("a", 5);
+
+        // 判断是否包含了所有不重复元素
+        boolean containsAll = multiset1.containsAll(multiset2);
+        // true
+        System.out.println(containsAll);
+
+
+        // 对任意o，如果super.count(o)>=sub.count(o)，返回true
+        boolean containsOccurrences = Multisets.containsOccurrences(multiset1, multiset2);
+        // false, 虽然multiset1实际上包含2个"a"，而multiset2包含5个"a"
+        System.out.println(containsOccurrences);
+
+
+        // 对toRemove中的重复元素，仅在removeFrom中删除相同个数
+        Multisets.removeOccurrences(multiset2, multiset1);
+        // [a x 3]
+        System.out.println(multiset2);
+
+        // multiset1 : [a x 2]  multiset2 : [a x 3]
+        Multisets.removeOccurrences(multiset1, multiset2);
+        // []
+        System.out.println(multiset1);
+
+        // multiset2移除所有multiset1出现的元素
+        multiset2.removeAll(multiset1);
+        // [a x 3]
+        System.out.println(multiset2);
+
+
+        multiset1.add("a", 5);
+        // 修改multisetToModify，以保证任意o都符合 multisetToModify.count(o)<=multisetToRetain.count(o)
+        Multisets.retainOccurrences(multiset1, multiset2);
+        // [a x 3]
+        System.out.println(multiset1);
+        // [a x 3]
+        System.out.println(multiset2);
+
+
+        multiset1.add("b", 3);
+        // 返回两个multiset的交集
+        Multiset<String> intersection = Multisets.intersection(multiset1, multiset2);
+        // [a x 3]
+        System.out.println(intersection);
+
+
+
+        Multiset<Integer> multiset = HashMultiset.create();
+        multiset.add(1, 1);
+        multiset.add(2, 2);
+        multiset.add(3, 3);
+        System.out.println(multiset);
+
+        // 返回Multiset的不可变拷贝，并将元素按重复出现的次数做降序排列
+        ImmutableMultiset immutableMultiset = Multisets.copyHighestCountFirst(multiset);
+        System.out.println(immutableMultiset);
+
+        // 返回Multiset的只读视图
+        Multiset unmodifiableMultiset = Multisets.unmodifiableMultiset(multiset);
+
+
+        SortedMultiset treeMultiset = TreeMultiset.create();
+        // 返回SortedMultiset的只读视图
+        Multisets.unmodifiableSortedMultiset(treeMultiset);
     }
 
     public static void main(String[] args) {
