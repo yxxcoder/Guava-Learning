@@ -517,16 +517,34 @@ public class CollectionUtilities {
         Multisets.unmodifiableSortedMultiset(treeMultiset);
     }
 
+    public static void multimaps() {
+
+        ImmutableSet<String> digits = ImmutableSet.of(
+                "zero", "one", "two", "three", "four",
+                "five", "six", "seven", "eight", "nine");
+        Function<String, Integer> lengthFunction = new Function<String, Integer>() {
+            public Integer apply(String string) {
+                return string.length();
+            }
+        };
+        ImmutableListMultimap<Integer, String> digitsByLength = Multimaps.index(digits, lengthFunction);
+        /*
+         * digitsByLength maps:
+         *  3 => {"one", "two", "six"}
+         *  4 => {"zero", "four", "five", "nine"}
+         *  5 => {"three", "seven", "eight"}
+         */
+    }
+
     public static void main(String[] args) {
         iterable();
         lists();
         sets();
         maps();
         multisets();
+        multimaps();
 
     }
-
-
 
 
 }
