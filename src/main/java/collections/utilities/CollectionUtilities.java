@@ -517,23 +517,65 @@ public class CollectionUtilities {
         Multisets.unmodifiableSortedMultiset(treeMultiset);
     }
 
+    /**
+     * Multimaps工具类
+     */
     public static void multimaps() {
 
+        /**
+         * index(Iterable, Function)
+         * Maps.uniqueIndex的兄弟方法
+         * 通常针对的场景是：有一组对象，它们有共同的特定属性，我们希望按照这个属性的值查询对象，但属性值不一定是独一无二的
+         */
         ImmutableSet<String> digits = ImmutableSet.of(
                 "zero", "one", "two", "three", "four",
                 "five", "six", "seven", "eight", "nine");
-        Function<String, Integer> lengthFunction = new Function<String, Integer>() {
-            public Integer apply(String string) {
-                return string.length();
-            }
-        };
-        ImmutableListMultimap<Integer, String> digitsByLength = Multimaps.index(digits, lengthFunction);
-        /*
-         * digitsByLength maps:
-         *  3 => {"one", "two", "six"}
-         *  4 => {"zero", "four", "five", "nine"}
-         *  5 => {"three", "seven", "eight"}
+        ImmutableListMultimap<Integer, String> digitsByLength = Multimaps.index(digits, string -> string.length());
+        // {4=[zero, four, five, nine], 3=[one, two, six], 5=[three, seven, eight]}
+        System.out.println(digitsByLength);
+
+        /**
+         * invertFrom(Multimap toInvert, Multimap dest)
          */
+        ArrayListMultimap<String, Integer> multimap = ArrayListMultimap.create();
+        multimap.putAll("b", Ints.asList(2, 4, 6));
+        multimap.putAll("a", Ints.asList(4, 2, 1));
+        multimap.putAll("c", Ints.asList(2, 5, 3));
+
+        TreeMultimap<Integer, String> inverse = Multimaps.invertFrom(multimap, TreeMultimap.create());
+        // {1=[a], 2=[a, b, c], 3=[c], 4=[a, b], 5=[c], 6=[b]}
+        System.out.println(inverse);
+
+        // 如果使用的是ImmutableMultimap，考虑改用ImmutableMultimap.inverse()做反转
+        ImmutableMultimap inverse2 = ImmutableMultimap.of(
+                "b", Ints.asList(2, 4, 6),
+                "a", Ints.asList(4, 2, 1),
+                "c", Ints.asList(2, 5, 3));
+        // {[2, 4, 6]=[b], [4, 2, 1]=[a], [2, 5, 3]=[c]}
+        System.out.println(inverse2.inverse());
+
+        /**
+         * forMap(Map)
+         * 把Map包装成SetMultimap
+         */
+        Map<String, Integer> map = ImmutableMap.of("a", 1, "b", 1, "c", 2);
+       // 把Map包装成SetMultimap
+        SetMultimap<String, Integer> setMultimap = Multimaps.forMap(map);
+        // {a=[1], b=[1], c=[2]}
+        System.out.println(setMultimap);
+
+
+        // 与Multimaps.invertFrom结合使用，可以把多对一的Map反转为一对多的Multimap
+        Multimap<Integer, String> inverseMap = Multimaps.invertFrom(setMultimap, HashMultimap.create());
+        // {1=[a, b], 2=[c]}
+        System.out.println(inverseMap);
+
+
+
+        /**
+         *
+         */
+
     }
 
     public static void main(String[] args) {
