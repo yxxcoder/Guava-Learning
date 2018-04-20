@@ -570,12 +570,32 @@ public class CollectionUtilities {
         // {1=[a, b], 2=[c]}
         System.out.println(inverseMap);
 
+    }
 
+    /**
+     * 包装器
+     */
+    public static void wrappers() {
+        Map map = Maps.newHashMap();
+        Multimap multimap = Multimaps.forMap(map);
+        /**
+         * 只读包装
+         */
+        Multimaps.unmodifiableMultimap(multimap);
+
+        Multimaps.unmodifiableListMultimap();
+
+        Multimaps.unmodifiableMultimap();
+
+        Multimaps.unmodifiableListMultimap();
 
         /**
-         *
+         * 同步包装
          */
 
+        /**
+         * 自定义实现
+         */
     }
 
     public static void main(String[] args) {
@@ -585,8 +605,11 @@ public class CollectionUtilities {
         maps();
         multisets();
         multimaps();
+        wrappers();
 
     }
+
+
 
 
 }
