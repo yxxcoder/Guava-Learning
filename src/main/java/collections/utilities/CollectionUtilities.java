@@ -2,6 +2,7 @@ package collections.utilities;
 
 
 import com.google.common.base.Function;
+import com.google.common.base.Supplier;
 import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
 
@@ -581,21 +582,74 @@ public class CollectionUtilities {
         /**
          * 只读包装
          */
-        Multimaps.unmodifiableMultimap(multimap);
+        Multimaps.unmodifiableMultimap(HashMultimap.create());
 
-        Multimaps.unmodifiableListMultimap();
+        Multimaps.unmodifiableListMultimap(ArrayListMultimap.create());
 
-        Multimaps.unmodifiableMultimap();
+        Multimaps.unmodifiableSetMultimap(HashMultimap.create());
 
-        Multimaps.unmodifiableListMultimap();
+        Multimaps.unmodifiableSortedSetMultimap(TreeMultimap.create());
 
         /**
          * 同步包装
          */
+        Multimaps.synchronizedMultimap(HashMultimap.create());
+
+        Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
+
+        Multimaps.synchronizedSetMultimap(HashMultimap.create());
+
+        Multimaps.synchronizedSortedSetMultimap(TreeMultimap.create());
 
         /**
          * 自定义实现
          */
+        ListMultimap<String, Integer> myMultimap = Multimaps.newListMultimap(
+                Maps.<String, Collection<Integer>>newTreeMap(),
+                new Supplier<LinkedList<Integer>>() {
+                    public LinkedList<Integer> get() {
+                        return Lists.newLinkedList();
+                    }
+                });
+
+    }
+
+    /**
+     * Tables工具类
+     */
+    public static void table() {
+
+        /**
+         * 自定义Table
+         */
+        // 使用LinkedHashMaps替代HashMaps
+        Table<String, Character, Integer> table = Tables.newCustomTable(
+                Maps.<String, Map<Character, Integer>>newLinkedHashMap(),
+                new Supplier<Map<Character, Integer>> () {
+                    public Map<Character, Integer> get() {
+                        return Maps.newLinkedHashMap();
+                    }
+                });
+        table.put("a", '1', 5);
+        table.put("b", '2', 8);
+        // {a={1=5}, b={2=8}}
+        System.out.println(table);
+
+        /**
+         * transpose
+         * 允许把Table<C, R, V>转置成Table<R, C, V>
+         * 在用Table构建加权有向图，这个方法就可以把有向图反转
+         */
+        Table<Character, String, Integer> transpose = Tables.transpose(table);
+        // {1={a=5}, 2={b=8}}
+        System.out.println(transpose);
+
+        /**
+         * 包装器
+         */
+        Tables.unmodifiableTable(table);
+
+        Tables.unmodifiableRowSortedTable(TreeBasedTable.create());
     }
 
     public static void main(String[] args) {
@@ -606,6 +660,7 @@ public class CollectionUtilities {
         multisets();
         multimaps();
         wrappers();
+        table();
 
     }
 
