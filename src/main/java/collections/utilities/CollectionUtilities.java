@@ -1,6 +1,5 @@
 package collections.utilities;
 
-
 import com.google.common.base.Function;
 import com.google.common.base.Supplier;
 import com.google.common.collect.*;
@@ -147,6 +146,7 @@ public class CollectionUtilities {
 
         int one = Iterables.get(concatenated, 1);
         // 2
+        System.out.println(one);
         System.out.println(one);
 
         // [1, 2, 3, 4, 5, 6]

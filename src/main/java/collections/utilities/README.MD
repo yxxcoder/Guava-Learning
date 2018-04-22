@@ -23,3 +23,114 @@ public static void staticConstructors() {
 
 }
 ```
+
+### 2. Iterables工具类
+```java
+public static void iterable() {
+    /**
+     * 常规方法
+     */
+    // 串联多个iterables的懒视图
+    // 懒视图意味着如果还没访问到某个iterable中的元素，则不会对它进行串联操作
+    Iterable<Integer> concatenated = Iterables.concat(
+            Ints.asList(1, 2, 3),
+            Ints.asList(4, 5, 6));
+    // [1, 2, 3, 4, 5, 6]
+    System.out.println(concatenated);
+
+    // 返回对象在iterable中出现的次数
+    int num = Iterables.frequency(concatenated, 1);
+    // 1
+    System.out.println(num);
+
+    // 把iterable按指定大小分割，得到的子集都不能进行修改操作
+    Iterable<List<Integer>> partition = Iterables.partition(concatenated, 2);
+    // [[1, 2], [3, 4], [5, 6]]
+    System.out.println(partition);
+
+    // 返回iterable的第一个元素，若iterable为空则返回默认值
+    int firstValue = Iterables.getFirst(concatenated, 0);
+    // 1
+    System.out.println(firstValue);
+
+    // 返回iterable的最后一个元素，若iterable为空则抛出NoSuchElementException
+    int lastValue = Iterables.getLast(concatenated, 0);
+    // 6
+    System.out.println(lastValue);
+
+    // 如果两个iterable中的所有元素相等且顺序一致，返回true
+    Iterable<Integer> other = Iterables.concat(
+            Ints.asList(4, 5, 6),
+            Ints.asList(1, 2, 3));
+    // [4, 5, 6, 1, 2, 3]
+    System.out.println(other);
+    boolean same = Iterables.elementsEqual(concatenated, other);
+    // false
+    System.out.println(same);
+
+    // 返回iterable的不可变视图
+    Iterable<Integer> unmodifiableIterable = Iterables.unmodifiableIterable(concatenated);
+    // [1, 2, 3, 4, 5, 6]
+    System.out.println(unmodifiableIterable);
+
+    // 限制iterable的元素个数限制给定值
+    Iterable<Integer> limitIterable = Iterables.limit(concatenated, 1);
+    // [1]
+    System.out.println(limitIterable);
+
+    // 获取iterable中唯一的元素，如果iterable为空或有多个元素，则快速失败
+    int value = Iterables.getOnlyElement(limitIterable);
+    // 1
+    System.out.println(value);
+
+
+    /**
+     * 与Collection方法相似的工具方法
+     */
+    List numbers = Lists.newArrayList(-1, 0);
+
+    Iterables.addAll(numbers, concatenated);
+    // [-1, 0, 1, 2, 3, 4, 5, 6]
+    System.out.println(numbers);
+
+    boolean contains = Iterables.contains(concatenated, 1);
+    // true
+    System.out.println(contains);
+
+    boolean removeAll = Iterables.removeAll(numbers, Lists.newArrayList(6, 9));
+    // true
+    System.out.println(removeAll);
+    // [-1, 0, 1, 2, 3, 4, 5]
+    System.out.println(numbers);
+
+    numbers = Lists.newArrayList(-1, 0);
+    boolean retainAll = Iterables.retainAll(numbers, Lists.newArrayList(0));
+    // true
+    System.out.println(retainAll);
+    // [0]
+    System.out.println(numbers);
+
+    int size = Iterables.size(concatenated);
+    // 6
+    System.out.println(size);
+
+    Integer[] array = Iterables.toArray(concatenated, Integer.class);
+    // 1 2 3 4 5 6
+    for (Integer integer : array) {
+        System.out.print(integer + " ");
+    }
+    System.out.println();
+
+    boolean isEmpty = Iterables.isEmpty(Lists.newArrayList());
+    // true
+    System.out.println(isEmpty);
+
+    int one = Iterables.get(concatenated, 1);
+    // 2
+    System.out.println(one);
+
+    // [1, 2, 3, 4, 5, 6]
+    String str = Iterables.toString(concatenated);
+    System.out.println(str);
+}
+```
