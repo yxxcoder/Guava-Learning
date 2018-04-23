@@ -134,3 +134,40 @@ public static void iterable() {
     System.out.println(str);
 }
 ```
+
+### 3. Lists工具类
+```java
+/**
+ * Lists工具类
+ */
+public static void lists() {
+
+    List countUp = Ints.asList(1, 2, 3, 4, 5);
+
+    List countDown = Lists.reverse(countUp);
+    // {5, 4, 3, 2, 1}
+    System.out.println(countDown);
+
+
+    List<List> parts = Lists.partition(countUp, 2);
+    // {{1,2}, {3,4}, {5}}
+    System.out.println(countDown);
+
+    /**
+     * Lists提供如下静态工厂方法
+     */
+    List list1 = Lists.newArrayList();
+    List list2 = Lists.newArrayList(1, 2);
+    List list3 = Lists.newArrayList(Iterables.concat());
+    List list4 = Lists.newArrayList(Ints.asList(1).iterator());
+    // 分配一个容量为10的数组
+    List list5 = Lists.newArrayListWithCapacity(10);
+    // 5L + arraySize + (arraySize / 10) = 16 分配一个容量为16的数组
+    List list6 = Lists.newArrayListWithExpectedSize(10);
+
+    LinkedList<Integer> linkedList1 = Lists.newLinkedList();
+    LinkedList linkedList2 = Lists.newLinkedList(Iterables.concat());
+
+}
+
+```
