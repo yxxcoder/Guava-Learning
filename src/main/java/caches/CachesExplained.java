@@ -3,14 +3,9 @@ package caches;
 
 import com.google.common.cache.*;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.graph.Graph;
 import com.google.common.primitives.Ints;
-
-import java.security.Key;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * 缓存
@@ -109,36 +104,132 @@ public class CachesExplained {
         /**
          * 缓存回收
          */
-        // 基于容量的回收
+
+        /**
+         * 基于容量的回收
+         */
         // 缓存将尝试回收最近没有使用或总体上很少使用的缓存项，在缓存项的数目达到限定值之前，缓存就可能进行回收操作
         // 不同的缓存项可以有不同的“权重”
-        LoadingCache<Integer, Integer> graphs = CacheBuilder.newBuilder()
+        LoadingCache<Integer, Integer> loadingCache = CacheBuilder.newBuilder()
                 .maximumWeight(100000)
-                .weigher((Weigher<Integer, Integer>) (k, g) -> k)
-                .build(
-                        new CacheLoader<Integer, Integer>() {
-                            public Integer load(Integer key) { // no checked exception
+                .weigher(new Weigher<Integer, Integer>() {
+                    public int weigh(Integer k, Integer g) {
+                        return k;
+                    }
+                })
+                .build(new CacheLoader<Integer, Integer>() {
+                            public Integer load(Integer key) {
                                 return fib(key);
                             }
                         });
+
+        /**
+         * 定时回收
+          */
+        // 缓存项在给定时间内没有被读/写访问，则回收。请注意这种缓存的回收顺序和基于大小回收一样
+        Cache<Integer, Integer> timed = CacheBuilder.newBuilder()
+                .expireAfterAccess(100, TimeUnit.SECONDS)
+                .build();
+        // 缓存项在给定时间内没有被写访问（创建或覆盖），则回收
+        // 如果认为缓存数据总是在固定时候后变得陈旧不可用，这种回收方式是可取的
+        Cache<Integer, Integer> timed2 = CacheBuilder.newBuilder()
+                .expireAfterWrite(100, TimeUnit.SECONDS)
+                .build();
+
+
+        /**
+         * 基于引用的回收
+         */
+        // 使用弱引用存储键
+        // 当键没有其它（强或软）引用时，缓存项可以被垃圾回收。因为垃圾回收仅依赖恒等式（==），使用弱引用键的缓存用==而不是equals比较键
+        CacheBuilder.newBuilder().weakKeys().build();
+
+        // 使用弱引用存储值
+        // 当值没有其它（强或软）引用时，缓存项可以被垃圾回收。因为垃圾回收仅依赖恒等式（==），使用弱引用值的缓存用==而不是equals比较值。
+        CacheBuilder.newBuilder().weakValues().build();
+
+        // 使用软引用存储值
+        // 软引用只有在响应内存需要时，才按照全局最近最少使用的顺序回收。使用软引用值的缓存同样用==而不是equals比较值
+        CacheBuilder.newBuilder().softValues().build();
+
+
+
+        /**
+         * 显式清除
+         * 任何时候，都可以显式地清除缓存项，而不是等到它被回收
+         */
+        Cache cacheClean = CacheBuilder.newBuilder().build();
+
+        // 个别清除
+        cacheClean.invalidate(1);
+        // 批量清除
+        cacheClean.invalidateAll(Ints.asList(1, 2, 3));
+        // 清除所有缓存项
+        cacheClean.invalidateAll();
+
+
+
+
+        /**
+         * 移除监听器
+         */
+        CacheLoader<Integer, Integer> loader = new CacheLoader<Integer, Integer> () {
+            public Integer load(Integer key) throws Exception {
+                return fib(key);
+            }
+        };
+        RemovalListener<Integer, Integer> removalListener = new RemovalListener<Integer, Integer>() {
+            public void onRemoval(RemovalNotification<Integer, Integer> removal) {
+                System.out.println(String.format("key: %d, value: %d be removed . Cause: %s ", removal.getKey(), removal.getValue(), removal.getCause()));
+            }
+        };
+
+        Cache listenCache = CacheBuilder.newBuilder()
+                .expireAfterAccess(2, TimeUnit.SECONDS)
+                .removalListener(removalListener)
+                .build(loader);
+
+        listenCache.put(1, fib(1));
+        listenCache.put(2, fib(2));
+        listenCache.invalidateAll();
+
+
+        // 把监听器装饰为异步操作
+        // 避免代价高昂的监听器方法在同步模式下拖慢正常的缓存请求
+        RemovalListener<Integer, Integer> async = RemovalListeners.asynchronous(removalListener, Executors.newSingleThreadExecutor());
+
+        listenCache = CacheBuilder.newBuilder()
+                .expireAfterAccess(2, TimeUnit.SECONDS)
+                .removalListener(async)
+                .build(loader);
+
+        listenCache.put(1, fib(1));
+        listenCache.put(2, fib(2));
+        listenCache.invalidateAll();
+
+
+        // 使用CacheBuilder构建的缓存不会"自动"执行清理和回收工作，只会在写操作时顺带做少量的维护工作
+        // 如果你的缓存是高吞吐的，那就无需担心缓存的维护和清理等工作
+        // 如果你的缓存只会偶尔有写操作，而你又不想清理工作阻碍了读操作，那么可以创建自己的维护线程，以固定的时间间隔调用Cache.cleanUp()
+        listenCache.cleanUp();
+
+
+
+        /**
+         * 刷新
+         * 刷新和回收不太一样。正如LoadingCache.refresh(K)所声明，刷新表示为键加载新值，这个过程可以是异步的
+         * 在刷新操作进行时，缓存仍然可以向其他线程返回旧值，而不像回收操作，读缓存的线程必须等待新值加载完成
+         */
+
+
+
     }
 
 
 
 
 
-    //    public static void example() {
-//        LoadingCache<Key, Graph> graphs = CacheBuilder.newBuilder()
-//                .maximumSize(1000)
-//                .expireAfterWrite(10, TimeUnit.MINUTES)
-//                .removalListener(MY_LISTENER)
-//                .build(
-//                        new CacheLoader<Key, Graph>() {
-//                            public Graph load(Key key) {
-//                                return createExpensiveGraph(key);
-//                            }
-//                        });
-//    }
+
     // 模拟计算或检索一个值的代价很高的场景
     public static int fib(int x) {
         if (x < 2) {
