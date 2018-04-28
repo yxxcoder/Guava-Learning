@@ -171,3 +171,254 @@ public static void lists() {
 }
 
 ```
+
+### 4. Sets工具类
+```java
+    /**
+     * 集合运算方法
+     */
+
+    Set<String> wordsWithPrimeLength = ImmutableSet.of("one", "two", "three", "six", "seven", "eight");
+    Set<String> primes = ImmutableSet.of("two", "three", "five", "seven");
+
+    // 交集运算
+    Sets.SetView<String> intersection = Sets.intersection(primes, wordsWithPrimeLength);
+    // [two, three, seven]
+    System.out.println(intersection);
+
+    // 并集运算
+    Sets.SetView<String> union = Sets.union(primes, wordsWithPrimeLength);
+    // [two, three, five, seven, one, six, eight]
+    System.out.println(union);
+
+    // 差集运算
+    Sets.SetView<String> difference = Sets.difference(wordsWithPrimeLength, primes);
+    Sets.SetView<String> difference2 = Sets.difference(primes, wordsWithPrimeLength);
+    // [one, six, eight]
+    System.out.println(difference);
+    // [five]
+    System.out.println(difference2);
+
+    // 对称差运算
+    Sets.SetView<String> symmetricDifference = Sets.symmetricDifference(wordsWithPrimeLength, primes);
+    Sets.SetView<String> symmetricDifference2 = Sets.symmetricDifference(primes, wordsWithPrimeLength);
+    // [one, six, eight, five]
+    System.out.println(symmetricDifference);
+    // [five, one, six, eight]
+    System.out.println(symmetricDifference2);
+
+
+    Set<String> animals = ImmutableSet.of("gerbil", "hamster");
+    Set<String> fruits = ImmutableSet.of("apple", "orange", "banana");
+
+    // 返回所有集合的笛卡儿积
+    Set<List<String>> product = Sets.cartesianProduct(animals, fruits);
+    // [[gerbil, apple], [gerbil, orange], [gerbil, banana],
+    // [hamster, apple], [hamster, orange], [hamster, banana]]
+    System.out.println(product);
+
+    // 返回给定集合的所有子集
+    Set<Set<String>> animalSets = Sets.powerSet(animals);
+    // [] [gerbil] [hamster] [gerbil, hamster]
+    animalSets.forEach(v -> System.out.print(v + " "));
+    System.out.println();
+
+
+    /**
+     * SetView也实现了Set接口，可直接当作Set使用
+     */
+
+    // 对自己做不可变拷贝
+    ImmutableSet<String> immutableCopy = intersection.immutableCopy();
+    // [two, three, seven]
+    System.out.println(immutableCopy);
+
+    // 拷贝进另一个可变集合
+    Set<String> set = intersection.copyInto(Sets.newHashSet("one"));
+    // [seven, two, three, one]
+    System.out.println(set);
+
+
+    /**
+     * 静态工厂方法
+     */
+
+    /**
+     * HashSet
+     */
+    // basic
+    Set<Integer> hashSet1 = Sets.newHashSet();
+    // with elements
+    Set<Integer> hashSet2 = Sets.newHashSet(1, 2);
+    // from Iterable
+    Set<Integer> hashSet3 = Sets.newHashSet(Iterables.concat());
+    // from Iterator
+    Set<Integer> hashSet4 = Sets.newHashSet(Ints.asList().iterator());
+    // with expected size
+    Set<Integer> hashSet5 = Sets.newHashSetWithExpectedSize(10);
+
+    /**
+     * LinkedHashSet
+     */
+    // basic
+    Set<Integer> linkedHashSet1 = Sets.newLinkedHashSet();
+    // from Iterable
+    Set<Integer> linkedHashSet2 = Sets.newLinkedHashSet(Iterables.concat());
+    // with expected size
+    Set<Integer> linkedHashSet3 = Sets.newLinkedHashSetWithExpectedSize(10);
+
+    /**
+     * TreeSet
+     */
+    // basic
+    Set<Integer> treeSet1 = Sets.newTreeSet();
+    // from Iterable
+    Set<Integer> treeSet2 = Sets.newTreeSet(Iterables.concat());
+
+    // rom Iterable
+    Set<Integer> treeSet3 = Sets.newTreeSet(Comparator.comparingInt(o -> o));
+    treeSet3.addAll(Ints.asList(1, 2, 3));
+    // [1, 2, 3]
+    System.out.println(treeSet3);
+
+    treeSet3 = Sets.newTreeSet((o1, o2) -> o2 - o1);
+    treeSet3.addAll(Ints.asList(1, 2, 3));
+    // [3, 2, 1]
+    System.out.println(treeSet3);
+    
+```
+
+### 5. Maps工具类
+```java
+    /**
+     * uniqueIndex
+     * 通常针对的场景是：有一组对象，它们在某个属性上分别有独一无二的值，而我们希望能够按照这个属性值查找对象
+     */
+    // 比方说，我们有一堆字符串，这些字符串的长度都是独一无二的，而我们希望能够按照特定长度查找字符串
+    List<String> strings = Lists.newArrayList("aaa", "bb");
+    ImmutableMap<Integer, String> stringsByIndex = Maps.uniqueIndex(strings, new Function<String, Integer>() {
+        public Integer apply(String string) {
+            return string.length();
+        }
+    });
+
+    /**
+     * difference
+     * 用来比较两个Map以获取所有不同点
+     */
+    Map<String, Integer> left = ImmutableMap.of("a", 1, "b", 2, "c", 3);
+    Map<String, Integer> right = ImmutableMap.of("b", 2, "c", 4, "d", 5);
+    MapDifference<String, Integer> diff = Maps.difference(left, right);
+
+    // 两个Map中都有的映射项，包括匹配的键与值
+    Map<String, Integer> entriesInCommon = diff.entriesInCommon();
+    // {b=2}
+    System.out.println(entriesInCommon);
+
+    // 键相同但是值不同值映射项
+    Map<String, MapDifference.ValueDifference<Integer>> entriesDiffering = diff.entriesDiffering();
+    // {c=(3, 4)}
+    System.out.println(entriesDiffering);
+
+    // 键只存在于左边Map的映射项
+    Map<String, Integer> entriesOnlyOnLeft = diff.entriesOnlyOnLeft();
+    // {a=1}
+    System.out.println(entriesOnlyOnLeft);
+
+    // 键只存在于右边Map的映射项
+    Map<String, Integer> entriesOnlyOnRight = diff.entriesOnlyOnRight();
+    // {d=5}
+    System.out.println(entriesOnlyOnRight);
+
+    /**
+     * Maps类中处理BiMap的工具方法
+     * BiMap : 既提供键到值的映射，也提供值到键的映射，是双向Map
+     */
+    BiMap<Integer, String> logfileMap = HashBiMap.create();
+    logfileMap.put(1,"a.log");
+    logfileMap.put(2,"b.log");
+
+    // 返回一个同步的（线程安全）的bimap，由给定的bimap支持
+    BiMap<Integer, String> synchronizedBiMap = Maps.synchronizedBiMap(logfileMap);
+
+    // 返回给定的bimap的不可修改的BiMap表示
+    BiMap<Integer, String> unmodifiableBiMap = Maps.unmodifiableBiMap(logfileMap);
+
+
+    /**
+     * Maps提供的静态工厂方法
+     */
+
+    /**
+     * HashMap
+     */
+    // basic
+    Map<String, String> hashMap1 = Maps.newHashMap();
+    // from Map
+    Map<String, String> hashMap2 = Maps.newHashMap(Maps.newHashMap());
+    // with expected size
+    Map<String, String> hashMap3 = Maps.newHashMapWithExpectedSize(10);
+
+    /**
+     * LinkedHashMap
+     */
+    // basic
+    Map<String, String> linkedHashMap1 = Maps.newLinkedHashMap();
+    // from Map
+    Map<String, String> linkedHashMap2 = Maps.newLinkedHashMap(Maps.newHashMap());
+
+    /**
+     * TreeMap
+     */
+    // basic
+    Map<String, String> treeMap1 = Maps.newTreeMap();
+    // from Comparator
+    Map<String, String> treeMap2 = Maps.newTreeMap(new Comparator<String>() {
+        @Override
+        public int compare(String o1, String o2) {
+            return o1.length() - o2.length();
+        }
+    });
+    // from SortedMap
+    Map<String, String> treeMap3 = Maps.newTreeMap(Maps.newTreeMap());
+
+    /**
+     * EnumMap
+     */
+    // from Class
+    Map<DayOfWeek, Integer> map =  Maps.newEnumMap(DayOfWeek.class);
+    map.put(MONDAY, 1);
+    // from Map
+    EnumMap enumMap = new EnumMap(ImmutableMap.of(MONDAY, 1));
+    enumMap.put(TUESDAY, 2);
+
+    /**
+     * ConcurrentMap
+     */
+    // basic
+    // 支持所有操作
+    ConcurrentMap<String, String> concurrentHashMap = Maps.newConcurrentMap();
+
+    /**
+     * IdentityHashMap
+     * 值可以重复的map
+     * 在IdentityHashMap中，是判断key是否为同一个对象，而不是普通HashMap的equals方式判断
+     */
+    // basic
+    IdentityHashMap<String, String> identityHashMap1 = Maps.newIdentityHashMap();
+    identityHashMap1.put(new String("yyy"), "1");
+    identityHashMap1.put(new String("yyy"), "2");
+    identityHashMap1.put(new String("xxx"), "3");
+    // {yyy=2, yyy=1, xxx=3}
+    System.out.println(identityHashMap1);
+
+    IdentityHashMap<String, String> identityHashMap2 = Maps.newIdentityHashMap();
+    identityHashMap2.put("yyy", "1");
+    identityHashMap2.put("yyy", "2");
+    identityHashMap2.put("xxx", "3");
+    // {xxx=3, yyy=2}
+    System.out.println(identityHashMap2);
+        
+```
+
+### 6. Multisets工具类
