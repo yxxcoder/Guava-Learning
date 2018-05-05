@@ -1,7 +1,9 @@
 package strings;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import com.google.common.primitives.Ints;
+
 
 /**
  * 字符串处理：分割，连接，填充
@@ -31,5 +33,17 @@ public class StringsExplained {
         str = Joiner.on(",").join(4, 5, 6);
         // 4,5,6
         System.out.println(str);
+
+
+        /**
+         * 拆分器[Splitter]
+         */
+        Iterable<String> strings = Splitter
+                .on(',')
+                .trimResults()
+                .omitEmptyStrings()
+                .split("foo,bar,,   qux");
+        // [foo, bar, qux]
+        System.out.println(strings);
     }
 }
