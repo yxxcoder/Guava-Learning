@@ -1,8 +1,11 @@
 package strings;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.primitives.Ints;
+
+import java.util.regex.Pattern;
 
 
 /**
@@ -38,11 +41,47 @@ public class StringsExplained {
         /**
          * 拆分器[Splitter]
          */
+        // 按单个字符拆分
         Iterable<String> strings = Splitter
                 .on(',')
                 .trimResults()
                 .omitEmptyStrings()
                 .split("foo,bar,,   qux");
+        // [foo, bar, qux]
+        System.out.println(strings);
+
+        // 按字符匹配器拆分
+        strings = Splitter
+                .on(CharMatcher.whitespace())
+                .trimResults()
+                .omitEmptyStrings()
+                .split("foo bar   qux,qq");
+        // [foo, bar, qux,qq]
+        System.out.println(strings);
+
+        // 按字符串拆分
+        strings = Splitter
+                .on("ab")
+                .trimResults()
+                .omitEmptyStrings()
+                .split("fooabbarabaux");
+        // [foo, bar, aux]
+        System.out.println(strings);
+
+        // 按正则表达式拆分
+        strings = Splitter
+                .onPattern("\\r?\\n")
+                .trimResults()
+                .omitEmptyStrings()
+                .split("fooabbarabaux");
+        // [foo, bar, aux]
+        System.out.println(strings);
+
+        strings = Splitter
+                .on(Pattern.compile("\\."))
+                .trimResults()
+                .omitEmptyStrings()
+                .split("foo.bar.qux");
         // [foo, bar, qux]
         System.out.println(strings);
     }
