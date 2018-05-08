@@ -1,11 +1,9 @@
 package collections.extension;
 
-import com.google.common.collect.ForwardingList;
-import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
-import com.google.common.collect.PeekingIterator;
+import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -52,6 +50,28 @@ public class CollectionHelpers {
          * AbstractIterator
          * 实现自己的Iterator
          */
+        // 包装一个iterator跳过长度为1的字符串
+        Iterator<String> skipNulls2 = skipSingle(Lists.newArrayList("aa", "b", "cc").iterator());
+        // aa cc
+        while (skipNulls2.hasNext()) {
+            System.out.print(skipNulls2.next() + " ");
+        }
+        System.out.println();
+    }
+
+    // 包装一个iterator跳过长度为1的字符串
+    public static Iterator<String> skipSingle(final Iterator<String> in) {
+        return new AbstractIterator<String>() {
+            protected String computeNext() {
+                while (in.hasNext()) {
+                    String s = in.next();
+                    if (s.length() > 1) {
+                        return s;
+                    }
+                }
+                return endOfData();
+            }
+        };
     }
 
 }
