@@ -46,6 +46,7 @@ public class CollectionHelpers {
         System.out.println(results);
 
 
+
         /**
          * AbstractIterator
          * 实现自己的Iterator
@@ -57,6 +58,22 @@ public class CollectionHelpers {
             System.out.print(skipNulls2.next() + " ");
         }
         System.out.println();
+
+
+
+        /**
+         * AbstractSequentialIterator
+         * 实现了computeNext(T)方法，接受前一个值作为参数
+         * 注意，你必须额外传入一个初始值，或者传入null让迭代立即结束。
+         * 因为computeNext(T)假定null值意味着迭代的末尾——AbstractSequentialIterator不能用来实现可能返回null的迭代器
+         */
+        // 注意初始值!
+        Iterator<Integer> powersOfTwo = new AbstractSequentialIterator<Integer>(1) {
+            protected Integer computeNext(Integer previous) {
+                return (previous == 1 << 30) ? null : previous * 2;
+            }
+        };
+
     }
 
     // 包装一个iterator跳过长度为1的字符串
