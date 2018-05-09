@@ -29,4 +29,23 @@ Guava对JDK集合的扩展，这是Guava最成熟和为人所知的部分
 ### [2.2 新集合类型](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/collections/newcollection)
 multisets, multimaps, tables, bidirectional maps等
 
+### [2.3 强大的集合工具类](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/collections/utilities)
+提供java.util.Collections中没有的集合工具
+
+### [2.4 扩展工具类](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/collections/extension)
+让实现和扩展集合类变得更容易，比如创建Collection的装饰器，或实现迭代器
+
+
+## 3. [缓存 [Caches]](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/caches)
+Guava Cache：本地缓存实现，支持多种缓存过期策略
+
+
+## 4. [函数式风格 [Functional idioms]](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/functional)
+Guava Cache：本地缓存实现，支持多种缓存过期策略
+
+
+## 5. [并发 [Concurrency]](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/functional)
+Guava Cache：本地缓存实现，支持多种缓存过期策略
+
+
 
