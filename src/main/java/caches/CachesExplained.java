@@ -4,6 +4,10 @@ package caches;
 import com.google.common.cache.*;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.Ints;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListenableFutureTask;
+
 import java.util.Map;
 import java.util.concurrent.*;
 
@@ -221,6 +225,31 @@ public class CachesExplained {
          * 在刷新操作进行时，缓存仍然可以向其他线程返回旧值，而不像回收操作，读缓存的线程必须等待新值加载完成
          */
 
+        //有些键不需要刷新，并且我们希望刷新是异步完成的
+        LoadingCache<Integer, Integer> reload = CacheBuilder.newBuilder()
+                .maximumSize(1000)
+                .refreshAfterWrite(1, TimeUnit.MINUTES)
+                .build(
+                        new CacheLoader<Integer, Integer>() {
+                            public Integer load(Integer key) { // no checked exception
+                                return fib(key);
+                            }
+
+                            public ListenableFuture<Integer> reload(final Integer key, Integer prev) {
+                                if (neverNeedsRefresh(key)) {
+                                    return Futures.immediateFuture(prev);
+                                } else {
+                                    // asynchronous!
+                                    ListenableFutureTask<Integer> task = ListenableFutureTask.create(new Callable<Integer>() {
+                                        public Integer call() {
+                                            return fib(key);
+                                        }
+                                    });
+                                    Executors.newSingleThreadExecutor().execute(task);
+                                    return task;
+                                }
+                            }
+                        });
 
 
     }
@@ -229,12 +258,16 @@ public class CachesExplained {
 
 
 
-
     // 模拟计算或检索一个值的代价很高的场景
-    public static int fib(int x) {
+    private static int fib(int x) {
         if (x < 2) {
             return x;
         }
         return fib(x-1) + fib(x-2);
+    }
+
+    // 大于100的值不需要刷新
+    private static boolean neverNeedsRefresh(Integer key) {
+        return key > 100 ? false : true;
     }
 }
