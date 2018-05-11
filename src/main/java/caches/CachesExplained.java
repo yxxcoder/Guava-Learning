@@ -9,6 +9,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.*;
 
 /**
@@ -223,11 +224,13 @@ public class CachesExplained {
          * 刷新
          * 刷新和回收不太一样。正如LoadingCache.refresh(K)所声明，刷新表示为键加载新值，这个过程可以是异步的
          * 在刷新操作进行时，缓存仍然可以向其他线程返回旧值，而不像回收操作，读缓存的线程必须等待新值加载完成
+         * 注意：缓存项只有在被检索时才会真正刷新，如果缓存项没有被检索，那刷新就不会真的发生，缓存项在过期时间后也变得可以回收
          */
 
         //有些键不需要刷新，并且我们希望刷新是异步完成的
         LoadingCache<Integer, Integer> reload = CacheBuilder.newBuilder()
                 .maximumSize(1000)
+                // 可以为缓存增加自动定时刷新功能
                 .refreshAfterWrite(1, TimeUnit.MINUTES)
                 .build(
                         new CacheLoader<Integer, Integer>() {
@@ -252,6 +255,51 @@ public class CachesExplained {
                         });
 
 
+        /**
+         * 其他特性
+         */
+
+        /**
+         * 统计功能
+         */
+        Cache record =  CacheBuilder
+                .newBuilder()
+                // 用来开启Guava Cache的统计功能
+                .recordStats().
+                build();
+        CacheStats stats = record.stats();
+
+        // 缓存命中率
+        stats.hitRate();
+
+        // 加载新值的平均时间，单位为纳秒
+        stats.averageLoadPenalty();
+
+        // 缓存项被回收的总数，不包括显式清除
+        stats.evictionCount();
+
+
+        /**
+         * asMap视图
+         */
+        Cache<Integer, String> numCache =  CacheBuilder.newBuilder().build();
+        numCache.put(1, "one");
+        numCache.put(2, "two");
+
+        // 包含当前所有加载到缓存的项
+        ConcurrentMap asMap = numCache.asMap();
+        // {2=two, 1=one}
+        System.out.println(asMap);
+
+        // 当前所有已加载键
+        Set keySet =numCache.asMap().keySet();
+        // [2, 1]
+        System.out.println(keySet);
+
+        // 实质上等同于cache.getIfPresent(key)，而且不会引起缓存项的加载
+        String one = numCache.asMap().get(0);
+        // null
+        System.out.println(one);
     }
 
 
