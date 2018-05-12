@@ -300,10 +300,8 @@ public class CachesExplained {
         String one = numCache.asMap().get(0);
         // null
         System.out.println(one);
+
     }
-
-
-
 
 
     // 模拟计算或检索一个值的代价很高的场景

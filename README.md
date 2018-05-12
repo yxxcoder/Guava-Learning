@@ -44,8 +44,8 @@ Guava Cache：本地缓存实现，支持多种缓存过期策略
 Guava Cache：本地缓存实现，支持多种缓存过期策略
 
 
-## 5. [并发 [Concurrency]](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/functional)
-Guava Cache：本地缓存实现，支持多种缓存过期策略
+## 5. 并发 [Concurrency]
+强大而简单的抽象，让编写正确的并发代码更简单
 
 
 
