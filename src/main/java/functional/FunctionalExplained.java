@@ -1,13 +1,12 @@
 package functional;
 
 
-import com.google.common.base.Function;
-import com.google.common.base.Functions;
+import com.google.common.base.*;
 import com.google.common.collect.Maps;
 import com.google.common.primitives.Ints;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * 函数式编程
@@ -56,6 +55,53 @@ public class FunctionalExplained {
         // [1, 2, 3]
         System.out.println(Ints.asList(1, 2, 3));
 
+
+        /**
+         * Predicates构造和处理方法
+         */
+        Predicate instanceOf = Predicates.instanceOf(Integer.class);
+        // true
+        System.out.println(instanceOf.apply(1));
+
+        Predicate contains = Predicates.contains(Pattern.compile("[1-9]"));
+        // true
+        System.out.println(contains.apply("008"));
+
+        Predicate in = Predicates.in(Ints.asList(1, 2, 3));
+        // false
+        System.out.println(in.apply(6));
+
+        Predicate isNull = Predicates.isNull();
+        // true
+        System.out.println(isNull.apply(null));
+
+        Predicate alwaysFalse = Predicates.alwaysFalse();
+        // false
+        System.out.println(alwaysFalse.apply("say false"));
+
+        Predicate alwaysTrue = Predicates.alwaysTrue();
+        // true
+        System.out.println(alwaysTrue.apply("say true"));
+
+        Predicate equalTo = Predicates.equalTo(new String("Hello"));
+        // true
+        System.out.println(equalTo.apply("Hello"));
+
+        Predicate com = Predicates.compose(input -> input.equals(String.class), input -> input.getClass());
+        // false
+        System.out.println(com.apply(345));
+
+        Predicate and = Predicates.and(Predicates.alwaysTrue(), Predicates.alwaysFalse());
+        // false
+        System.out.println(and.apply("and"));
+
+        Predicate or = Predicates.or(Predicates.alwaysTrue(), Predicates.alwaysFalse());
+        // true
+        System.out.println(or.apply("or"));
+
+        Predicate not = Predicates.not(Predicates.alwaysTrue());
+        // false
+        System.out.println(not.apply("not"));
 
     }
 
