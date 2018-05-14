@@ -2,6 +2,8 @@ package functional;
 
 
 import com.google.common.base.*;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.primitives.Ints;
 
@@ -105,7 +107,21 @@ public class FunctionalExplained {
 
     }
 
+    public static void using() {
+        /**
+         * 断言
+         */
+
+        Iterable<Integer> list = Iterables.filter(Ints.asList(-1, 0, 1), Predicates.in(Ints.asList(1, 2, 3)));
+        // [1]
+        System.out.println(list);
+
+        FluentIterable.filter();
+
+    }
+
     public static void main(String args[]) {
         manipulating();
+        using();
     }
 }
