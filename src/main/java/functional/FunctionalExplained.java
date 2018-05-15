@@ -2,11 +2,12 @@ package functional;
 
 
 import com.google.common.base.*;
-import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.primitives.Ints;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -108,15 +109,50 @@ public class FunctionalExplained {
     }
 
     public static void using() {
+
         /**
          * 断言
+         * 断言的最基本应用就是过滤集合
+         * 注意: 并非用一个新的集合表示过滤，而只是基于原集合的视图
+         *
+         * 集合类型	    过滤方法
+         * Iterable	    Iterables.filter(Iterable, Predicate)FluentIterable.filter(Predicate)
+         * Iterator	    Iterators.filter(Iterator, Predicate)
+         * Collection	Collections2.filter(Collection, Predicate)
+         * Set	        Sets.filter(Set, Predicate)
+         * SortedSet	Sets.filter(SortedSet, Predicate)
+         * Map	        Maps.filterKeys(Map, Predicate)Maps.filterValues(Map, Predicate)Maps.filterEntries(Map, Predicate)
+         * SortedMap	Maps.filterKeys(SortedMap, Predicate)Maps.filterValues(SortedMap, Predicate)Maps.filterEntries(SortedMap, Predicate)
+         * Multimap	    Multimaps.filterKeys(Multimap, Predicate)Multimaps.filterValues(Multimap, Predicate)Multimaps.filterEntries(Multimap, Predicate)
          */
 
         Iterable<Integer> list = Iterables.filter(Ints.asList(-1, 0, 1), Predicates.in(Ints.asList(1, 2, 3)));
         // [1]
         System.out.println(list);
 
-        FluentIterable.filter();
+        Collection<Integer> collection = Collections2.filter(Ints.asList(-1, 0, 1), Predicates.in(Ints.asList(1, 2, 3)));
+        // [1]
+        System.out.println(collection);
+
+
+        /**
+         * 除了简单过滤，Guava另外提供了若干用Predicate处理Iterable的工具
+         * 通常在Iterables工具类中，或者是FluentIterable的”fluent”（链式调用）方法
+         *
+         * Iterables方法签名	                        说明	                                                    另请参见
+         * boolean all(Iterable, Predicate)	        是否所有元素满足断言?                                      Iterators.all(Iterator, Predicate)
+         *                                          懒实现：如果发现有元素不满足，不会继续迭代	                    FluentIterable.allMatch(Predicate)
+         * boolean any(Iterable, Predicate)	        是否有任意元素满足元素满足断言?                              Iterators.any(Iterator, Predicate)
+         *                                          懒实现：只会迭代到发现满足的元素	                            FluentIterable.anyMatch(Predicate)
+         * T find(Iterable, Predicate)	            循环并返回一个满足元素满足断言的元素,                         Iterators.find(Iterator, Predicate)
+         *                                          如果没有则抛出NoSuchElementException	                    Iterables.find(Iterable, Predicate, T default)
+         *                                                                                                  Iterators.find(Iterator, Predicate, T default)
+         * Optional<T> tryFind(Iterable, Predicate)	返回一个满足元素满足断言的元素，若没有则返回Optional.absent()	Iterators.find(Iterator, Predicate)
+         *                                                                                                  Iterables.find(Iterable, Predicate, T default)
+         *                                                                                                  Iterators.find(Iterator, Predicate, T default)
+         * indexOf(Iterable, Predicate)	            返回第一个满足元素满足断言的元素索引值，若没有返回-1	            Iterators.indexOf(Iterator, Predicate)
+         * removeIf(Iterable, Predicate)	        移除所有满足元素满足断言的元素，实际调用Iterator.remove()方法	Iterators.removeIf(Iterator, Predicate)
+         */
 
     }
 
