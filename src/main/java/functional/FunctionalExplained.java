@@ -2,12 +2,11 @@ package functional;
 
 
 import com.google.common.base.*;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
+import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -153,6 +152,54 @@ public class FunctionalExplained {
          * indexOf(Iterable, Predicate)	            返回第一个满足元素满足断言的元素索引值，若没有返回-1	            Iterators.indexOf(Iterator, Predicate)
          * removeIf(Iterable, Predicate)	        移除所有满足元素满足断言的元素，实际调用Iterator.remove()方法	Iterators.removeIf(Iterator, Predicate)
          */
+
+
+        /**
+         * 转换集合
+         * 同样，所有的Guava转换方法也返回原集合的视图
+         *
+         * 集合类型	                转换方法
+         * Iterable	        Iterables.transform(Iterable, Function)
+         *                  FluentIterable.transform(Function)
+         * Iterator	        Iterators.transform(Iterator, Function)
+         * Collection	    Collections2.transform(Collection, Function)
+         * List	            Lists.transform(List, Function)
+         * Map*	            Maps.transformValues(Map, Function)
+         *                  Maps.transformEntries(Map, EntryTransformer)
+         * SortedMap*	    Maps.transformValues(SortedMap, Function)
+         *                  Maps.transformEntries(SortedMap, EntryTransformer)
+         * Multimap*	    Multimaps.transformValues(Multimap, Function)
+         *                  Multimaps.transformEntries(Multimap, EntryTransformer)
+         * ListMultimap*	Multimaps.transformValues(ListMultimap, Function)
+         *                  Multimaps.transformEntries(ListMultimap, EntryTransformer)
+         * Table	        Tables.transformValues(Table, Function)
+         */
+
+
+        List<Integer> number = Lists.transform(
+                Lists.newArrayList("one", "two", "three"),
+                Functions.forMap(ImmutableMap.of("one", 1, "two", 2, "three", 3)));
+        // [1, 2, 3]
+        System.out.println(number);
+
+        /**
+         * Map和Multimap有特殊的方法，其中有个EntryTransformer<K, V1, V2>参数
+         * 可以使用旧的键值来计算，并且用计算结果替换旧值
+         */
+        ListMultimap<String, String> firstNameToLastNames = ArrayListMultimap.create();
+        firstNameToLastNames.putAll("Wang", Lists.newArrayList("yx", "dd"));
+        firstNameToLastNames.putAll("ZH", Lists.newArrayList("sb", "tt"));
+        firstNameToLastNames.putAll("Li", Lists.newArrayList("kk", "nm"));
+
+        ListMultimap<String, String> firstNameToName = Multimaps.transformEntries(
+                firstNameToLastNames,
+                new Maps.EntryTransformer<String, String, String>() {
+                    public String transformEntry(String firstName, String lastName) {
+                        return firstName + " " + lastName;
+                    }
+                });
+        // {Wang=[Wang yx, Wang dd], ZH=[ZH sb, ZH tt], Li=[Li kk, Li nm]}
+        System.out.println(firstNameToName);
 
     }
 
