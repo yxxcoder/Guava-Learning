@@ -4,7 +4,6 @@ package functional;
 import com.google.common.base.*;
 import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -200,6 +199,27 @@ public class FunctionalExplained {
                 });
         // {Wang=[Wang yx, Wang dd], ZH=[ZH sb, ZH tt], Li=[Li kk, Li nm]}
         System.out.println(firstNameToName);
+
+
+
+        /**
+         * 可以组合Function使用的类
+         *
+         * Ordering	    Ordering.onResultOf(Function)
+         * Predicate	Predicates.compose(Predicate, Function)
+         * Equivalence	Equivalence.onResultOf(Function)
+         * Supplier	    Suppliers.compose(Function, Supplier)
+         * Function	    Functions.compose(Function, Function)
+         */
+
+
+        /**
+         * 此外，ListenableFuture API支持转换ListenableFuture
+         * Futures也提供了接受AsyncFunction参数的方法。AsyncFunction是Function的变种，它允许异步计算值
+         *
+         * Futures.transform(ListenableFuture, Function, Executor)
+         * Futures.transform(ListenableFuture, AsyncFunction, Executor)
+         */
 
     }
 
