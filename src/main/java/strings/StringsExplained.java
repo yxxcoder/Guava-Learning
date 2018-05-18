@@ -70,11 +70,11 @@ public class StringsExplained {
 
         // 按正则表达式拆分
         strings = Splitter
-                .onPattern("\\r?\\n")
+                .onPattern("\\/")
                 .trimResults()
                 .omitEmptyStrings()
-                .split("fooabbarabaux");
-        // [foo, bar, aux]
+                .split("foo/abb /ara b ");
+        // [foo, abb, ara b]
         System.out.println(strings);
 
         strings = Splitter
@@ -84,5 +84,44 @@ public class StringsExplained {
                 .split("foo.bar.qux");
         // [foo, bar, qux]
         System.out.println(strings);
+
+        // 按固定长度拆分；最后一段可能比给定长度短，但不会为空
+        strings = Splitter
+                .fixedLength(2)
+                .split("foo bar");
+        // [fo, o , ba, r]
+        System.out.println(strings);
+
+
+        /**
+         * 拆分器修饰符
+         *
+         * 方法	                        描述
+         * omitEmptyStrings()	    从结果中自动忽略空字符串
+         * trimResults()	        移除结果字符串的前导空白和尾部空白
+         * trimResults(CharMatcher)	给定匹配器，移除结果字符串的前导匹配字符和尾部匹配字符
+         * limit(int)	            限制拆分出的字符串数量
+         */
+
+
+        /**
+         * 字符匹配器[CharMatcher]
+         */
+        String string = "^666 and  sb ";
+
+        // 移除control字符
+        String noControl = CharMatcher.javaIsoControl().removeFrom(string);
+        System.out.println(noControl);
+
+        // 去除两端的空格，并把中间的连续空格替换成单个空格
+        String spaced = CharMatcher.whitespace().trimAndCollapseFrom(string, ' ');
+        System.out.println();
+
+//        CharMatcher.inRange();
+
+        // 只保留数字和小写字母
+        String lowerAndDigit = CharMatcher.JAVA_DIGIT.or(CharMatcher.JAVA_LOWER_CASE).retainFrom(string);
+
+
     }
 }
