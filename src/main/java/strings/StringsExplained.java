@@ -107,21 +107,40 @@ public class StringsExplained {
         /**
          * 字符匹配器[CharMatcher]
          */
-        String string = "^666 and  sb ";
+        String string = "\u0009666 and  sb ";
+        // 	666 and  sb
+        System.out.println(string);
 
         // 移除control字符
         String noControl = CharMatcher.javaIsoControl().removeFrom(string);
+        // 666 and  sb
         System.out.println(noControl);
 
         // 去除两端的空格，并把中间的连续空格替换成单个空格
-        String spaced = CharMatcher.whitespace().trimAndCollapseFrom(string, ' ');
-        System.out.println();
+        String spaced = CharMatcher.whitespace().collapseFrom(string, ' ');
+        //  666 and sb
+        System.out.println(spaced);
 
-//        CharMatcher.inRange();
+        // 只保留数字字符
+        String theDigits = CharMatcher.inRange('0', '9').retainFrom(string);
+        // 666
+        System.out.println(theDigits);
+
+        // 用*号替换所有数字
+        String noDigits = CharMatcher.inRange('0', '9').replaceFrom(string, "*");
+        // 	*** and  sb
+        System.out.println(noDigits);
+
 
         // 只保留数字和小写字母
-        String lowerAndDigit = CharMatcher.JAVA_DIGIT.or(CharMatcher.JAVA_LOWER_CASE).retainFrom(string);
+        String lowerAndDigit = CharMatcher.inRange('0', '9').or(CharMatcher.inRange('a', 'z')).retainFrom(string);
+        // 666andsb
+        System.out.println(lowerAndDigit);
 
+        /**
+         * 字符匹配器
+         */
+        CharMatcher.any();
 
     }
 }
