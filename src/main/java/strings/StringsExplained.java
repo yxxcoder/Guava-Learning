@@ -1,8 +1,6 @@
 package strings;
 
-import com.google.common.base.CharMatcher;
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
+import com.google.common.base.*;
 import com.google.common.primitives.Ints;
 
 import java.util.regex.Pattern;
@@ -137,10 +135,58 @@ public class StringsExplained {
         // 666andsb
         System.out.println(lowerAndDigit);
 
+
+
         /**
-         * 字符匹配器
+         * 获取字符匹配器的常见方法
+         * 方法	                    描述
+         * anyOf(CharSequence)	枚举匹配字符。如CharMatcher.anyOf(“aeiou”)匹配小写英语元音
+         * is(char)	            给定单一字符匹配
+         * inRange(char, char)	给定字符范围匹配，如CharMatcher.inRange(‘a’, ‘z’)
+         *
+         * 此外，CharMatcher还有negate()、and(CharMatcher)和or(CharMatcher)方法
          */
-        CharMatcher.any();
+
+
+
+        /**
+         * 使用字符匹配器
+         * 方法	                                            描述
+         * collapseFrom(CharSequence, char)	        把每组连续的匹配字符替换为特定字符。如WHITESPACE.collapseFrom(string, ‘ ‘)把字符串中的连续空白字符替换为单个空格。
+         * matchesAllOf(CharSequence)	            测试是否字符序列中的所有字符都匹配。
+         * removeFrom(CharSequence)	                从字符序列中移除所有匹配字符。
+         * retainFrom(CharSequence)	                在字符序列中保留匹配字符，移除其他字符。
+         * trimFrom(CharSequence)	                移除字符序列的前导匹配字符和尾部匹配字符。
+         * replaceFrom(CharSequence, CharSequence)	用特定字符序列替代匹配字符。
+         *
+         * 所有这些方法返回String，除了matchesAllOf返回的是boolean
+         */
+
+
+        /**
+         * 字符集
+         * Charsets针对所有Java平台都要保证支持的六种字符集提供了常量引用
+         * 尝试使用这些常量，而不是通过名称获取字符集实例。
+         */
+
+        byte[] bytes = string.getBytes(Charsets.UTF_8);
+
+
+        /**
+         * 大小写格式
+         * CaseFormat被用来方便地在各种ASCII大小写规范间转换字符串——比如，编程语言的命名规范。CaseFormat支持的格式如下：
+         *
+         * 格式	                范例
+         * LOWER_CAMEL	      lowerCamel
+         * LOWER_HYPHEN	      lower-hyphen
+         * LOWER_UNDERSCORE	  lower_underscore
+         * UPPER_CAMEL	      UpperCamel
+         * UPPER_UNDERSCORE	  UPPER_UNDERSCORE
+         */
+
+        String lowerCamel = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, "CONSTANT_NAME");
+        // constantName
+        System.out.println(lowerCamel);
 
     }
 }
