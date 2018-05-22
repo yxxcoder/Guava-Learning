@@ -78,6 +78,9 @@ public class ListenableFutureExplained {
                 service
         );
 
+        /**
+         *  ListenableFutureTask
+         */
         ListenableFutureTask task = ListenableFutureTask.create(new Callable<Integer>() {
 
             @Override
@@ -93,6 +96,20 @@ public class ListenableFutureExplained {
             }
         }, 0);
 
+        Futures.addCallback(
+                task,
+                new FutureCallback<Integer>() {
+            @Override
+            public void onSuccess(Integer result) {
+                System.out.println(result);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        },
+        Executors.newSingleThreadExecutor());
     }
 
 }
