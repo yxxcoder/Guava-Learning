@@ -1,8 +1,6 @@
 package concurrency;
 
 import com.google.common.util.concurrent.*;
-
-import java.util.Random;
 import java.util.concurrent.*;
 
 /**
@@ -17,14 +15,14 @@ public class ListenableFutureExplained {
         /**
          * Java原生并发编程
          */
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        ExecutorService executorService = Executors.newCachedThreadPool();
 
         // Callable+Future方式
-        Future<Integer> future = executorService.submit(new Callable<Integer>() {
+        Future<String> future = executorService.submit(new Callable<String>() {
             @Override
-            public Integer call() throws InterruptedException {
+            public String call() throws InterruptedException {
                 TimeUnit.SECONDS.sleep(1);
-                return new Random().nextInt(100);
+                return "Callable+Future";
             }
         });
 
@@ -34,11 +32,10 @@ public class ListenableFutureExplained {
         // Callable+FutureTask方式
         // FutureTask类实现了RunnableFuture接口, 而RunnableFuture继承了Runnable接口和Future接口
         // 所以它既可以作为Runnable被线程执行，又可以作为Future得到Callable的返回值
-        FutureTask<Integer> futureTask = new FutureTask<Integer>(new Callable<Integer>() {
-            @Override
-            public Integer call() throws InterruptedException {
+        FutureTask<String> futureTask = new FutureTask<String>(new Callable<String>() {
+            public String call() throws InterruptedException {
                 TimeUnit.SECONDS.sleep(1);
-                return new Random().nextInt(100);
+                return "Callable+FutureTask";
             }
         });
          executorService.submit(futureTask);
@@ -50,22 +47,23 @@ public class ListenableFutureExplained {
         System.out.println(futureTask.get());
 
 
+
         /**
          * ListenableFuture的创建
          */
         ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10));
-        ListenableFuture<Integer> listenableFuture = service.submit(new Callable<Integer>() {
-            public Integer call() throws InterruptedException {
+        ListenableFuture<String> listenableFuture = service.submit(new Callable<String>() {
+            public String call() throws InterruptedException {
                 TimeUnit.SECONDS.sleep(1);
-                return new Random().nextInt(100);
+                return "ListenableFuture";
             }
         });
 
         Futures.addCallback(
                 listenableFuture,
-                new FutureCallback<Integer>() {
+                new FutureCallback<String>() {
                     @Override
-                    public void onSuccess(Integer result) {
+                    public void onSuccess(String result) {
                         System.out.println(result);
                         service.shutdown();
                     }
@@ -81,35 +79,32 @@ public class ListenableFutureExplained {
         /**
          *  ListenableFutureTask
          */
-        ListenableFutureTask task = ListenableFutureTask.create(new Callable<Integer>() {
-
+        ListenableFutureTask task = ListenableFutureTask.create(new Callable<String>() {
             @Override
-            public Integer call() throws Exception {
-                return null;
+            public String call() throws Exception {
+                return "ListenableFutureTask";
             }
         });
+//        new Thread(task).start();
+        executorService.submit(task);
+        System.out.println(task.get());
 
-        task = ListenableFutureTask.create(new Runnable() {
+        ListenableFutureTask task2 = ListenableFutureTask.create(new Runnable() {
             @Override
             public void run() {
-
+                try {
+                    TimeUnit.SECONDS.sleep(2L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }, 0);
+        executorService.submit(task2);
+        System.out.println(task2.get());
 
-        Futures.addCallback(
-                task,
-                new FutureCallback<Integer>() {
-            @Override
-            public void onSuccess(Integer result) {
-                System.out.println(result);
-            }
 
-            @Override
-            public void onFailure(Throwable t) {
-
-            }
-        },
-        Executors.newSingleThreadExecutor());
+        // 运行完记得关掉
+        executorService.shutdown();
     }
 
 }
