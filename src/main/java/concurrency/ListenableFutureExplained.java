@@ -1,6 +1,9 @@
 package concurrency;
 
 import com.google.common.util.concurrent.*;
+
+import java.sql.Time;
+import java.util.Random;
 import java.util.concurrent.*;
 
 /**
@@ -29,7 +32,7 @@ public class ListenableFutureExplained {
         System.out.println(future.get());
 
 
-        // Callable+FutureTask方式
+        // Callable+FutureTask方式 异步任务
         // FutureTask类实现了RunnableFuture接口, 而RunnableFuture继承了Runnable接口和Future接口
         // 所以它既可以作为Runnable被线程执行，又可以作为Future得到Callable的返回值
         FutureTask<String> futureTask = new FutureTask<String>(new Callable<String>() {
@@ -54,10 +57,17 @@ public class ListenableFutureExplained {
         ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10));
         ListenableFuture<String> listenableFuture = service.submit(new Callable<String>() {
             public String call() throws InterruptedException {
-                TimeUnit.SECONDS.sleep(1);
                 return "ListenableFuture";
             }
         });
+
+        listenableFuture.addListener(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("listenableFuture addListener");
+                    }
+                }, service);
 
         Futures.addCallback(
                 listenableFuture,
@@ -105,6 +115,40 @@ public class ListenableFutureExplained {
 
         // 运行完记得关掉
         executorService.shutdown();
+
+
+        /**
+         * 复杂链式的异步操作
+         */
+        ListeningExecutorService decorator = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
+
+        ListenableFuture<Integer> randomFuture = decorator.submit(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return new Random().nextInt(100);
+            }
+        });
+        AsyncFunction<Integer, Integer> squareFunction = new AsyncFunction<Integer, Integer>() {
+            @Override
+            public ListenableFuture<Integer> apply(Integer input) throws Exception {
+                return decorator.submit(new Square(input));
+            }
+        };
+
+        ListenableFuture<Integer> calculateFuture = Futures.transform(randomFuture, squareFunction, decorator);
+
+
+
+    }
+    static class Square implements Callable {
+        private int n;
+        public Square(int n) {
+            this.n = n;
+        }
+        @Override
+        public Integer call() throws Exception {
+            return n*n;
+        }
     }
 
 }
