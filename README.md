@@ -4,48 +4,58 @@
 ## 1. 基本工具 [Basic utilities]
 让使用Java语言变得更舒适
 
-### [1.1 使用和避免null](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/basic/optional)
+### [1.1 使用和避免null](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch01_basic/optional)
 null是模棱两可的，会引起令人困惑的错误，有些时候它让人很不舒服。很多Guava工具类用快速失败拒绝null值，而不是盲目地接受
 
-### [1.2 前置条件](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/basic/preconditions)
+### [1.2 前置条件](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch01_basic/preconditions)
 让方法中的条件检查更简单
 
-### [1.3 常见Object方法](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/basic/object)
+### [1.3 常见Object方法](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch01_basic/object)
 简化Object方法实现，如hashCode()和toString()
 
-### [1.4 排序: Guava强大的”流畅风格比较器”](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/basic/ordering)
+### [1.4 排序: Guava强大的”流畅风格比较器”](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch01_basic/ordering)
 排序器[Ordering]是Guava流畅风格比较器[Comparator]的实现，可以用来为构建复杂的比较器，以完成集合排序的功能
 
-### [1.5 Throwables：简化了异常和错误的传播与检查](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/basic/throwables)
+### [1.5 Throwables：简化了异常和错误的传播与检查](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch01_basic/throwables)
 简化了异常和错误的传播与检查
 
 
 ## 2. 集合 [Collections]
 Guava对JDK集合的扩展，这是Guava最成熟和为人所知的部分
 
-### [2.1 不可变集合](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/collections/immutable)
+### [2.1 不可变集合](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch02_collections/immutable)
 用不变的集合进行防御性编程和性能提升
 
-### [2.2 新集合类型](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/collections/newcollection)
+### [2.2 新集合类型](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch02_collections/newcollection)
 multisets, multimaps, tables, bidirectional maps等
 
-### [2.3 强大的集合工具类](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/collections/utilities)
+### [2.3 强大的集合工具类](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch02_collections/utilities)
 提供java.util.Collections中没有的集合工具
 
-### [2.4 扩展工具类](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/collections/extension)
+### [2.4 扩展工具类](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch02_collections/extension)
 让实现和扩展集合类变得更容易，比如创建Collection的装饰器，或实现迭代器
 
 
-## 3. [缓存 [Caches]](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/caches)
+## 3. [缓存 [Caches]](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch03_caches)
 Guava Cache：本地缓存实现，支持多种缓存过期策略
 
 
-## 4. [函数式风格 [Functional idioms]](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/functional)
+## 4. [函数式风格 [Functional idioms]](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch04_functional)
 Guava Cache：本地缓存实现，支持多种缓存过期策略
 
 
-## 5. 并发 [Concurrency]
+## 5. [并发 [Concurrency]](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch05_concurrency)
 强大而简单的抽象，让编写正确的并发代码更简单
 
 
+## 6. [字符串处理 [String]](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch06_strings)
+非常有用的字符串工具，包括分割、连接、填充等操作
+
+
+## 7. [原生类型[Primitives]](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch07_primitives)
+扩展 JDK 未提供的原生类型（如int、char）操作， 包括某些类型的无符号形式
+
+
+## 8. [区间[Ranges]](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch08_ranges)
+可比较类型的区间API，包括连续和离散类型
 
