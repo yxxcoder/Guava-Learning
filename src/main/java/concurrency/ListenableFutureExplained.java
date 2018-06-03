@@ -1,8 +1,9 @@
 package concurrency;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.*;
-
-import java.sql.Time;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.*;
 
@@ -22,7 +23,6 @@ public class ListenableFutureExplained {
 
         // Callable+Future方式
         Future<String> future = executorService.submit(new Callable<String>() {
-            @Override
             public String call() throws InterruptedException {
                 TimeUnit.SECONDS.sleep(1);
                 return "Callable+Future";
@@ -54,7 +54,7 @@ public class ListenableFutureExplained {
         /**
          * ListenableFuture的创建
          */
-        ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10));
+        final ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10));
         ListenableFuture<String> listenableFuture = service.submit(new Callable<String>() {
             public String call() throws InterruptedException {
                 return "ListenableFuture";
@@ -63,7 +63,6 @@ public class ListenableFutureExplained {
 
         listenableFuture.addListener(
                 new Runnable() {
-                    @Override
                     public void run() {
                         System.out.println("listenableFuture addListener");
                     }
@@ -72,13 +71,11 @@ public class ListenableFutureExplained {
         Futures.addCallback(
                 listenableFuture,
                 new FutureCallback<String>() {
-                    @Override
                     public void onSuccess(String result) {
                         System.out.println(result);
                         service.shutdown();
                     }
 
-                    @Override
                     public void onFailure(Throwable t) {
                         service.shutdown();
                     }
@@ -90,7 +87,6 @@ public class ListenableFutureExplained {
          *  ListenableFutureTask
          */
         ListenableFutureTask task = ListenableFutureTask.create(new Callable<String>() {
-            @Override
             public String call() throws Exception {
                 return "ListenableFutureTask";
             }
@@ -100,7 +96,6 @@ public class ListenableFutureExplained {
         System.out.println(task.get());
 
         ListenableFutureTask task2 = ListenableFutureTask.create(new Runnable() {
-            @Override
             public void run() {
                 try {
                     TimeUnit.SECONDS.sleep(2L);
@@ -110,6 +105,7 @@ public class ListenableFutureExplained {
             }
         }, 0);
         executorService.submit(task2);
+        // 0
         System.out.println(task2.get());
 
 
@@ -119,33 +115,121 @@ public class ListenableFutureExplained {
 
         /**
          * 复杂链式的异步操作
+         *
+         * transformAsync(ListenableFuture<A>, AsyncFunction<A, B>, Executor)
+         * 返回一个新的ListenableFuture ，该ListenableFuture 返回的result是由传入的AsyncFunction 参数指派到传入的 ListenableFuture中
+         *
+         * transform(ListenableFuture<A>, Function<A, B>, Executor)
+         * 返回一个新的ListenableFuture ，该ListenableFuture 返回的result是由传入的Function 参数指派到传入的 ListenableFuture中
+         *
+         * allAsList(Iterable<ListenableFuture<V>>)
+         * 返回一个ListenableFuture ，该ListenableFuture 返回的result是一个List，List中的值是每个ListenableFuture的返回值
+         * 假如传入的其中之一fails或者cancel，这个Future fails 或者canceled
+         *
+         * successfulAsList(Iterable<ListenableFuture<V>>)
+         * 返回一个ListenableFuture ，该Future的结果包含所有成功的Future，按照原来的顺序，当其中之一Failed或者cancel，则用null替代
          */
-        ListeningExecutorService decorator = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
+        final ListeningExecutorService decorator = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
 
-        ListenableFuture<Integer> randomFuture = decorator.submit(new Callable<Integer>() {
-            @Override
+        ListenableFuture randomFuture = decorator.submit(new Callable<Integer>() {
             public Integer call() throws Exception {
                 return new Random().nextInt(100);
             }
         });
-        AsyncFunction<Integer, Integer> squareFunction = new AsyncFunction<Integer, Integer>() {
-            @Override
+        AsyncFunction squareFunction = new AsyncFunction<Integer, Integer>() {
             public ListenableFuture<Integer> apply(Integer input) throws Exception {
                 return decorator.submit(new Square(input));
             }
         };
 
-        ListenableFuture<Integer> calculateFuture = Futures.transform(randomFuture, squareFunction, decorator);
+        /**
+         * 返回一个100以内的随机数转换为一个随机数的平方
+         */
+        ListenableFuture<Integer> calculateFuture = Futures.transformAsync(
+                randomFuture,
+                squareFunction,
+                decorator);
+
+        Futures.addCallback(
+                calculateFuture,
+                new FutureCallback<Integer>() {
+                    public void onSuccess(Integer result) {
+                        // square: n   100以内随机数的平方
+                        System.out.println("square: " + result);
+                    }
+
+                    public void onFailure(Throwable t) {
+                    }
+                },
+                decorator
+        );
+
+        /**
+         * 返回一个100以内的随机数转换为"return:  random"字符串
+         */
+        ListenableFuture<String> strFuture = Futures.transform(
+                randomFuture,
+                new Function<Integer, String>() {
+                    public String apply(Integer input) {
+                        return "return: " + input;
+                    }
+                },
+                decorator);
+
+        Futures.addCallback(
+                strFuture,
+                new FutureCallback<String>() {
+                    public void onSuccess(String result) {
+                        // return:  n   n为100以内的随机数
+                        System.out.println(result);
+                    }
+
+                    public void onFailure(Throwable t) {
+                    }
+                },
+                decorator
+        );
+
+        ListenableFuture randomFuture1 = decorator.submit(new Callable<Integer>() {
+            public Integer call() throws Exception {
+                return new Random().nextInt(10);
+            }
+        });
+        ListenableFuture randomFuture2 = decorator.submit(new Callable<Integer>() {
+            public Integer call() throws Exception {
+                throw  new Exception();
+            }
+        });
+
+        /**
+         * 10以内的随机数和fail ListenableFuture组成的ListenableFuture list
+         * 传入的其中之一fails或者cancel，这个Future fails 或者canceled
+         */
+        List<ListenableFuture<Integer>> futureList = Lists.newArrayList(randomFuture1, randomFuture2);
+
+        ListenableFuture<List<Integer>> allAsList = Futures.allAsList(futureList);
+
+        Futures.addCallback(allAsList, new FutureCallback<List<Integer>>() {
+            @Override
+            public void onSuccess(List<Integer> result) {
+                // list: [n, nn]  返回10以内的随机数和100以内组成的随机数的list
+                System.out.println("list: " + result);
+            }
+            @Override
+            public void onFailure(Throwable t) {
+                t.printStackTrace();
+            }
+        }, decorator);
 
 
-
+        // 运行完记得关掉
+        decorator.shutdown();
     }
     static class Square implements Callable {
         private int n;
         public Square(int n) {
             this.n = n;
         }
-        @Override
         public Integer call() throws Exception {
             return n*n;
         }
