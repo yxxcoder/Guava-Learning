@@ -29,8 +29,10 @@ public class PrimitivesExplained {
         arrayUtilities();
         // 通用工具方法
         generalUtilities();
-        //
+        // 字节转换方法
+        byteConversion();
     }
+
 
     /**
      * 原生类型数组工具
@@ -125,5 +127,24 @@ public class PrimitivesExplained {
         short sh = Shorts.saturatedCast(23456789L);
         // 32767
         System.out.println(sh);
+    }
+
+    /**
+     * 字节转换方法
+     * Guava提供了若干方法，用来把原生类型按大字节序与字节数组相互转换。所有这些方法都是符号无关的，此外Booleans没有提供任何下面的方法
+     *
+     * 方法或字段签名	                        描述
+     * int BYTES	                        常量：表示该原生类型需要的字节数
+     * prim fromByteArray(byte[] bytes)	    使用字节数组的前Prims.BYTES个字节，按大字节序返回原生类型值；如果bytes.length <= Prims.BYTES，抛出IAE
+     * prim fromBytes(byte b1, …, byte bk)	接受Prims.BYTES个字节参数，按大字节序返回原生类型值
+     * byte[] toByteArray(prim value)	    按大字节序返回value的字节数组
+     */
+    private static void byteConversion() {
+
+        // 该原生类型需要的字节数
+        int intBytes = Ints.BYTES;
+        int charBytes = Chars.BYTES;
+
+
     }
 }
