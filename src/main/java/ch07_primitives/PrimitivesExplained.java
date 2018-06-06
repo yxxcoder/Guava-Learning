@@ -146,5 +146,19 @@ public class PrimitivesExplained {
         int charBytes = Chars.BYTES;
 
 
+        // 使用字节数组的前Prims.BYTES个字节，按大字节序返回原生类型值
+        int fromByteArray = Ints.fromByteArray(new byte[]{0x12, 0x13, 0x14, 0x15, 0x33});
+        // 12131415
+        System.out.println(Integer.toHexString(fromByteArray));
+
+
+        // 接受Prims.BYTES个字节参数，按大字节序返回原生类型值
+        int fromBytes = Ints.fromBytes((byte)0x12, (byte)0x13, (byte)0x14, (byte)0x15);
+        System.out.println(Integer.toHexString(fromBytes));
+
+
+        // 按大字节序返回value的字节数组
+        byte[] bytes = Ints.toByteArray(18);
+
     }
 }
