@@ -31,6 +31,8 @@ public class PrimitivesExplained {
         generalUtilities();
         // 字节转换方法
         byteConversion();
+        // 无符号支持
+        unsignedSupport();
     }
 
 
@@ -160,5 +162,12 @@ public class PrimitivesExplained {
         // 按大字节序返回value的字节数组
         byte[] bytes = Ints.toByteArray(18);
 
+    }
+
+
+    /**
+     * 无符号支持
+     */
+    private static void unsignedSupport() {
     }
 }
