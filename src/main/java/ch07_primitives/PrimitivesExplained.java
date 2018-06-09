@@ -1,11 +1,10 @@
 package ch07_primitives;
 
-import com.google.common.primitives.Chars;
-import com.google.common.primitives.Ints;
-import com.google.common.primitives.Shorts;
+import com.google.common.primitives.*;
 
 import java.util.Comparator;
 import java.util.List;
+
 
 /**
  * 原生类型
@@ -169,5 +168,17 @@ public class PrimitivesExplained {
      * 无符号支持
      */
     private static void unsignedSupport() {
+
+        // 按无符号十进制解析字符串
+        int i = UnsignedInts.parseUnsignedInt("123");
+        long l = UnsignedLongs.parseUnsignedLong("123");
+
+        // 按无符号的特定进制解析字符串
+        int radixTen = UnsignedInts.parseUnsignedInt("300", 10);
+        //
+        System.out.println(radixTen);
+        long radixTwo = UnsignedLongs.parseUnsignedLong("100000", 10000);
+        //
+        System.out.println(radixTwo);
     }
 }
