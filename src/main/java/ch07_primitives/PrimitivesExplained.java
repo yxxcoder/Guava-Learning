@@ -155,6 +155,7 @@ public class PrimitivesExplained {
 
         // 接受Prims.BYTES个字节参数，按大字节序返回原生类型值
         int fromBytes = Ints.fromBytes((byte)0x12, (byte)0x13, (byte)0x14, (byte)0x15);
+        // 12131415
         System.out.println(Integer.toHexString(fromBytes));
 
 
@@ -169,16 +170,70 @@ public class PrimitivesExplained {
      */
     private static void unsignedSupport() {
 
+        /**
+         * 无符号通用工具方法
+         * (JDK的原生类型包装类提供了有符号形式的类似方法)
+         */
         // 按无符号十进制解析字符串
         int i = UnsignedInts.parseUnsignedInt("123");
         long l = UnsignedLongs.parseUnsignedLong("123");
 
+
         // 按无符号的特定进制解析字符串
-        int radixTen = UnsignedInts.parseUnsignedInt("300", 10);
-        //
-        System.out.println(radixTen);
-        long radixTwo = UnsignedLongs.parseUnsignedLong("100000", 10000);
-        //
+        int radixTwo = UnsignedInts.parseUnsignedInt("110", 2);
+        // 6
         System.out.println(radixTwo);
+
+        long radix16 = UnsignedLongs.parseUnsignedLong("fff", 16);
+        // 4095
+        System.out.println(radix16);
+
+
+        // 数字按无符号十进制转为字符串
+        String intToString = UnsignedInts.toString(1024);
+        String longToString = UnsignedLongs.toString(2014L);
+
+
+        // 数字按无符号特定进制转为字符串
+        String radix2 = UnsignedInts.toString(1024, 2);
+        // 10000000000
+        System.out.println(radix2);
+
+        String radix8 = UnsignedLongs.toString(1234L, 8);
+        // 2322
+        System.out.println(radix8);
+
+
+
+        /**
+         * 无符号包装类
+         * 无符号包装类包含了若干方法，让使用和转换更容易
+         */
+
+        UnsignedInteger sixteen = UnsignedInteger.valueOf(16);
+
+        // 简单算术运算
+        // 加法运算
+        // 26
+        System.out.println(sixteen.plus(UnsignedInteger.valueOf(10)));
+
+        // 减法运算
+        // 14
+        System.out.println(sixteen.minus(UnsignedInteger.valueOf(2)));
+
+        // 乘法运算
+        // 32
+        System.out.println(sixteen.times(UnsignedInteger.valueOf(2)));
+
+        // 除法运算
+        // 8
+        System.out.println(sixteen.dividedBy(UnsignedInteger.valueOf(2)));
+
+        //模运算
+        // 4
+        System.out.println(sixteen.mod(UnsignedInteger.valueOf(12)));
+
+
+
     }
 }
