@@ -2,6 +2,7 @@ package ch07_primitives;
 
 import com.google.common.primitives.*;
 
+import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.List;
 
@@ -208,6 +209,7 @@ public class PrimitivesExplained {
         /**
          * 无符号包装类
          * 无符号包装类包含了若干方法，让使用和转换更容易
+         * 包括: UnsignedInteger, UnsignedLongs
          */
 
         UnsignedInteger sixteen = UnsignedInteger.valueOf(16);
@@ -232,6 +234,19 @@ public class PrimitivesExplained {
         //模运算
         // 4
         System.out.println(sixteen.mod(UnsignedInteger.valueOf(12)));
+
+
+
+        // 按给定BigInteger返回无符号对象，若BigInteger为负或不匹配，抛出IAE
+        BigInteger bigIntNum = new BigInteger("2345678900");
+        UnsignedInteger unsignedIntNum = UnsignedInteger.valueOf(bigIntNum);
+        // 2345678900
+        System.out.println(unsignedIntNum);
+
+        // 按给定long返回无符号对象，若long为负或不匹配，抛出IAE
+        UnsignedInteger unsignedIntNum2 = UnsignedInteger.valueOf(2345678900L);
+        // 12345678901234567890
+        System.out.println(unsignedIntNum2);
 
 
 
