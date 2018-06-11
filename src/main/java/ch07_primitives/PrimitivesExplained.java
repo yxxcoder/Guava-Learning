@@ -209,7 +209,7 @@ public class PrimitivesExplained {
         /**
          * 无符号包装类
          * 无符号包装类包含了若干方法，让使用和转换更容易
-         * 包括: UnsignedInteger, UnsignedLongs
+         * 包括: UnsignedInteger, UnsignedLong
          */
 
         UnsignedInteger sixteen = UnsignedInteger.valueOf(16);
@@ -249,6 +249,31 @@ public class PrimitivesExplained {
         System.out.println(unsignedIntNum2);
 
 
+        // 把给定的值当作无符号类型
+        // UnsignedInteger.asUnsigned(1<<31)的值为231,尽管1<<31当作int时是负的
+        UnsignedInteger fromIntBits = UnsignedInteger.fromIntBits(1 << 31);
+        // 2147483648
+        System.out.println(fromIntBits);
+
+        UnsignedInteger fromIntBits2 = UnsignedInteger.fromIntBits(-1);
+        // 4294967295
+        System.out.println(fromIntBits2);
+
+
+        // 用BigInteger返回该无符号对象的值
+        BigInteger bigInteger = sixteen.bigIntegerValue();
+        // 16
+        System.out.println(bigInteger);
+
+
+        // 返回无符号值的字符串表示
+        String str16 = sixteen.toString();
+        // 16
+        System.out.println(str16);
+
+        String sixteenToRadix2 = sixteen.toString(2);
+        // 10000
+        System.out.println(sixteenToRadix2);
 
     }
 }
