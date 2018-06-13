@@ -1,7 +1,6 @@
 package ch08_ranges;
 
-import com.google.common.collect.BoundType;
-import com.google.common.collect.Range;
+import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
 
 /**
@@ -16,6 +15,8 @@ public class RangesExplained {
         buildingRanges();
         // 区间运算
         operations();
+        // 离散域
+        discreteDomains();
     }
 
 
@@ -161,6 +162,36 @@ public class RangesExplained {
         boolean openClose = Range.open(3, 5).isConnected(Range.open(5, 10));
         // false
         println(openClose);
+
+    }
+
+    
+    /**
+     * 部分（但不是全部）可比较类型是离散的，即区间的上下边界都是可枚举的
+     * DiscreteDomain提供的离散域实例包括：
+     * 类型	        离散域
+     * Integer	    integers()
+     * Long	        longs()
+     */
+    private static void discreteDomains() {
+
+        DiscreteDomain<Integer> integers = DiscreteDomain.integers();
+
+        // ContiguousSet.create并没有真的构造了整个集合，而是返回了set形式的区间视图
+        ImmutableSortedSet set = ContiguousSet.create(Range.open(1, 5), integers.integers());
+        // [2..4]
+        println(set);
+
+        // 包含[1, 2, ..., Integer.MAX_VALUE]
+        ImmutableSortedSet<Integer> numbers = ContiguousSet.create(Range.greaterThan(0), DiscreteDomain.integers());
+        // [1..2147483647]
+        println(numbers);
+
+        // 把离散域转为区间的”规范形式”
+        // 如果ContiguousSet.create(a, domain).equals(ContiguousSet.create(b, domain))并且!a.isEmpty()，则有a.canonical(domain).equals(b.canonical(domain))。（这并不意味着a.equals(b)）
+        Range<Integer> canonical = Range.closed(1, 5).canonical(integers);
+        // [1..6)
+        println(canonical);
 
     }
 
