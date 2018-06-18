@@ -1,20 +1,29 @@
 package ch09_io;
 
-import com.google.common.io.ByteStreams;
-import com.google.common.io.CharStreams;
-
+import com.google.common.base.Charsets;
+import com.google.common.io.*;
 import java.io.*;
+import java.net.URL;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
+import static com.google.common.base.Charsets.UTF_8;
+import static java.nio.file.StandardOpenOption.*;
 
 /**
  * I/O
  * @create 2018-06-14 下午11:52
  **/
 public class IOExplained {
+
+    private static File testFile = new File("src/main/java/ch09_io/test.txt");
+
     public static void main(String args[]) throws Exception {
         // 字节流和字符流
         byteStreamsAndCharStreams();
+        // 创建源与汇
+        SourcesAndSinks();
     }
+
 
     /**
      * 字节流和字符流工具类
@@ -99,6 +108,73 @@ public class IOExplained {
         reader.close();
         writer.close();
     }
+
+
+    /**
+     * 源与汇
+     *
+     * Guava提供的关于源与汇的抽象:
+     *      字节	        字符
+     * 读	ByteSource	CharSource
+     * 写	ByteSink	CharSink
+     */
+    private static void SourcesAndSinks() throws Exception {
+        /**
+         * 创建源与汇
+         * 
+         * Guava提供了若干源与汇的实现：
+         * 字节 Bytes                                    字符 Chars
+         * Files.asByteSource(File)	                    Files.asCharSource(File, Charset)
+         * Files.asByteSink(File, FileWriteMode...)	    Files.asCharSink(File, Charset, FileWriteMode...)
+         * MoreFiles.asByteSource(Path, OpenOption...)	MoreFiles.asCharSource(Path, Charset, OpenOption...)
+         * MoreFiles.asByteSink(Path, OpenOption...)	MoreFiles.asCharSink(Path, Charset, OpenOption...)
+         * Resources.asByteSource(URL)	                Resources.asCharSource(URL, Charset)
+         * ByteSource.wrap(byte[])	                    CharSource.wrap(CharSequence)
+         * ByteSource.concat(ByteSource...)	            CharSource.concat(CharSource...)
+         * ByteSource.slice(long, long)	                N/A
+         * CharSource.asByteSource(Charset)	            ByteSource.asCharSource(Charset)
+         * N/A	                                        ByteSink.asCharSink(Charset)
+         */
+
+        ByteSource fileAsByteSource = Files.asByteSource(testFile);
+
+        ByteSink fileAsByteSink = Files.asByteSink(testFile, FileWriteMode.APPEND);
+
+        ByteSource MoreFilesByteSource = MoreFiles.asByteSource(testFile.toPath(), READ);
+
+        ByteSink MoreFilesByteSink = MoreFiles.asByteSink(testFile.toPath(), APPEND);
+
+        ByteSource urlAsByteSource = Resources.asByteSource(new URL("https://www.baidu.com"));
+
+        ByteSource wrap = ByteSource.wrap("Hello World".getBytes());
+
+        ByteSource concat = ByteSource.concat(fileAsByteSource, wrap);
+
+        ByteSource slice = fileAsByteSource.slice(5L, 10L);
+
+        ByteSource charSourceAsByteSource = CharSource.wrap("Hello World").asByteSource(UTF_8);
+
+
+        CharSource fileAsCharSource = Files.asCharSource(testFile, Charsets.UTF_8);
+
+        CharSink fileAsCharSink = Files.asCharSink(testFile, Charsets.UTF_8, FileWriteMode.APPEND);
+
+        CharSource moreFilesAsCharSource = MoreFiles.asCharSource(testFile.toPath(), Charsets.UTF_8, READ);
+
+        CharSink moreFileAsCharSink = MoreFiles.asCharSink(testFile.toPath(), UTF_8, StandardOpenOption.APPEND);
+
+        CharSource urlAsCharSource = Resources.asCharSource(new URL("https://www.baidu.com"), UTF_8);
+
+        CharSource strWrap = CharSource.wrap("Hello World");
+
+        CharSource concatCharSource = CharSource.concat(fileAsCharSource, strWrap);
+
+        ByteSource asByteSource = concatCharSource.asByteSource(UTF_8);
+
+        CharSink asCharSink = fileAsByteSink.asCharSink(UTF_8);
+    }
+
+
 
     private static void println(Object object) {
         System.out.println(object.toString());
