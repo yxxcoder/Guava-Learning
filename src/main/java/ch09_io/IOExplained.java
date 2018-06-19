@@ -349,8 +349,12 @@ public class IOExplained {
         println(simplifyPath);
 
         Traverser<File> fileTraverser = Files.fileTraverser();
-        Iterable<File> src = fileTraverser.breadthFirst(new File("src"));
-        println(src);
+        Iterable<File> src = fileTraverser.breadthFirst(new File("src/main/java/ch09_io"));
+        // src/main/java/ch09_io
+        // src/main/java/ch09_io/IOExplained.java
+        // src/main/java/ch09_io/test.txt
+        // src/main/java/ch09_io/new.txt
+        src.forEach(file -> println(file.toString()));
     }
 
     private static void println(Object object) {
