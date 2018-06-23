@@ -1,6 +1,7 @@
 package ch10_hashing;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
 import com.google.common.hash.*;
 
 /**
@@ -14,7 +15,13 @@ public class HashingExplained {
     public static void main(String[] args) {
         // 散列包的组成
         organization();
+        // 布鲁姆过滤器
+        bloomFilter();
+        // Hashing类
+        hashingClass();
     }
+
+
 
     /**
      * 散列包的组成
@@ -65,6 +72,68 @@ public class HashingExplained {
         System.out.println(maxLength);
 
     }
+
+    /**
+     * 布鲁姆过滤器
+     * 通过权衡得到一个错误概率可以接受的结果
+     */
+    private static void bloomFilter() {
+        int count = 0;
+
+        BloomFilter<Integer> bloomFilter = BloomFilter.create(Funnels.integerFunnel(), 100, 0.01);
+
+        for (int i = 0; i < 100; i++) {
+            bloomFilter.put(i);
+        }
+        for (int i = 1000; i < 2000; i++) {
+            if (bloomFilter.mightContain(i)) {
+                System.out.println(++count + "次错误");
+            }
+        }
+
+    }
+
+    /**
+     * Hashing类
+     * Hashing类提供了若干散列函数，以及运算HashCode对象的工具方法
+     *
+     * 提供的散列函数:
+     *  md5()
+     *  murmur3_128()
+     *  murmur3_32()
+     *  sha1()
+     *  sha256()
+     *  sha512()
+     *  goodFastHash(int bits)
+     *
+     * HashCode运算:
+     *  HashCode combineOrdered( Iterable<HashCode>)
+     *  以有序方式联接散列码，如果两个散列集合用该方法联接出的散列码相同，那么散列集合的元素可能是顺序相等的
+     *  HashCode combineUnordered( Iterable<HashCode>)
+     *  以无序方式联接散列码，如果两个散列集合用该方法联接出的散列码相同，那么散列集合的元素可能在某种排序下是相等的
+     *  int consistentHash( HashCode, int buckets)
+     *  为给定的”桶”大小返回一致性哈希值。当”桶”增长时，该方法保证最小程度的一致性哈希值变化。详见一致性哈希。
+     *
+     */
+    private static void hashingClass() {
+        HashCode h1 = Hashing.sha256().hashInt(123);
+        HashCode h2 = Hashing.sha256().hashInt(456);
+        HashCode combineOrdered1 = Hashing.combineOrdered(Lists.newArrayList(h1, h2));
+        // -286591342
+        System.out.println(combineOrdered1.asInt());
+        HashCode combineOrdered2 = Hashing.combineOrdered(Lists.newArrayList(h2, h1));
+        // -1239761294
+        System.out.println(combineOrdered2.asInt());
+
+        HashCode combineUnordered1 = Hashing.combineUnordered(Lists.newArrayList(h2, h1));
+        // 779622128
+        System.out.println(combineUnordered1.asInt());
+
+        HashCode combineUnordered2 = Hashing.combineUnordered(Lists.newArrayList(h2, h1));
+        // 779622128
+        System.out.println(combineUnordered2.asInt());
+    }
+
 
     static class Person {
         final int id;
