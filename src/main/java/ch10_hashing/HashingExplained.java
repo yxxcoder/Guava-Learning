@@ -112,12 +112,17 @@ public class HashingExplained {
      *  HashCode combineUnordered( Iterable<HashCode>)
      *  以无序方式联接散列码，如果两个散列集合用该方法联接出的散列码相同，那么散列集合的元素可能在某种排序下是相等的
      *  int consistentHash( HashCode, int buckets)
-     *  为给定的”桶”大小返回一致性哈希值。当”桶”增长时，该方法保证最小程度的一致性哈希值变化。详见一致性哈希。
+     *  为给定的”桶”大小返回一致性哈希值。当”桶”增长时，该方法保证最小程度的一致性哈希值变化
      *
      */
     private static void hashingClass() {
         HashCode h1 = Hashing.sha256().hashInt(123);
         HashCode h2 = Hashing.sha256().hashInt(456);
+
+        /**
+         * 以有序方式联接散列码
+         * 如果两个散列集合用该方法联接出的散列码相同，那么散列集合的元素可能是顺序相等的
+         */
         HashCode combineOrdered1 = Hashing.combineOrdered(Lists.newArrayList(h1, h2));
         // -286591342
         System.out.println(combineOrdered1.asInt());
@@ -125,6 +130,10 @@ public class HashingExplained {
         // -1239761294
         System.out.println(combineOrdered2.asInt());
 
+        /**
+         * 以无序方式联接散列码
+         * 如果两个散列集合用该方法联接出的散列码相同，那么散列集合的元素可能在某种排序下是相等的
+         */
         HashCode combineUnordered1 = Hashing.combineUnordered(Lists.newArrayList(h2, h1));
         // 779622128
         System.out.println(combineUnordered1.asInt());
@@ -132,6 +141,13 @@ public class HashingExplained {
         HashCode combineUnordered2 = Hashing.combineUnordered(Lists.newArrayList(h2, h1));
         // 779622128
         System.out.println(combineUnordered2.asInt());
+
+        /**
+         * 为给定的”桶”大小返回一致性哈希值
+         * 当”桶”增长时，该方法保证最小程度的一致性哈希值变化
+         */
+        int candidate = Hashing.consistentHash(h1, 3);
+        System.out.println(candidate);
     }
 
 
