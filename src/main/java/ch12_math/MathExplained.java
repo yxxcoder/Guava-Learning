@@ -69,5 +69,24 @@ public class MathExplained {
         // 31622776601683793319988935444327185337195551393252
         System.out.println(sqrt);
 
+        /**
+         * 附加功能
+         * Guava还另外提供了一些有用的运算函数
+         *
+         * 运算	        IntMath	            LongMath	        BigIntegerMath*
+         * 最大公约数	    gcd(int, int)	    gcd(long, long)	    BigInteger.gcd(BigInteger)
+         * 取模	        mod(int, int)	    mod(long, long)	    BigInteger.mod(BigInteger)
+         * 取幂	        pow(int, int)	    pow(long, int)	    BigInteger.pow(int)
+         * 是否2的幂	    isPowerOfTwo(int)	isPowerOfTwo(long)	isPowerOfTwo(BigInteger)
+         * 阶乘*	        factorial(int)	    factorial(int)	    factorial(int)
+         * 二项式系数*	binomial(int, int)	binomial(int, int)	binomial(int, int)
+         *
+         * *BigInteger的最大公约数和取模运算由JDK提供
+         * *阶乘和二项式系数的运算结果如果溢出，则返回MAX_VALUE
+         */
+
+        int mod = IntMath.mod(18, 12);
+        // 6
+        System.out.println(mod);
     }
 }
