@@ -3,10 +3,9 @@ package ch13_reflection;
 import com.google.common.reflect.TypeParameter;
 import com.google.common.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.math.BigInteger;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Guava 的 Java 反射机制工具类
@@ -56,6 +55,44 @@ public class ReflectionExplained {
                 TypeToken.of(Integer.class),
                 new TypeToken<Queue<String>>() {}
         );
+
+        /**
+         * 查询
+         * TypeToken支持很多种类能支持的查询，但是也会把通用的查询约束考虑在内
+         *
+         * 支持的查询操作包括：
+         * 方法	                    描述
+         * getType()	            获得包装的java.lang.reflect.Type
+         * getRawType()	            返回大家熟知的运行时类
+         * getSubtype(Class<?>)	    返回那些有特定原始类的子类型。举个例子，如果这有一个Iterable并且参数是List.class，那么返回将是List
+         * getSupertype(Class<?>)	产生这个类型的超类，这个超类是指定的原始类型。举个例子，如果这是一个Set并且参数是Iterable.class，结果将会是Iterable
+         * isAssignableFrom(type)	如果这个类型是 assignable from 指定的类型，并且考虑泛型参数，返回true。List<? extends Number>是assignable from List，但List没有
+         * getTypes()	            返回一个Set，包含了这个所有接口，子类和类是这个类型的类。返回的Set同样提供了classes()和interfaces()方法允许你只浏览超类和接口类
+         * isArray()	            检查某个类型是不是数组，甚至是<? extends A[]>
+         * getComponentType()	    返回组件类型数组
+         */
+
+        // 获得包装的java.lang.reflect.Type
+        Type mapTokenType = mapToken.getType();
+        // type: java.util.Map<java.lang.String, java.math.BigInteger>
+        println("type", mapTokenType);
+
+        // 返回大家熟知的运行时类
+        Class<? super Map<String, BigInteger>> rawType = mapToken.getRawType();
+        // rawType: interface java.util.Map
+        println("rawType", rawType);
+
+        // 返回那些有特定原始类的子类型
+        TypeToken<? extends Map<String, BigInteger>> subtype = mapToken.getSubtype(TreeMap.class);
+        // subtype: java.util.TreeMap<java.lang.String, java.math.BigInteger>
+        println("subtype", subtype);
+
+        // 产生这个类型的超类，这个超类是指定的原始类型
+        TypeToken<? super Map<String, BigInteger>> supertype = mapToken.getSupertype(Map.class);
+        // supertype: java.util.Map<java.lang.String, java.math.BigInteger>
+        println("supertype", supertype);
+
+
     }
 
     private static <K, V> TypeToken<Map<K, V>> mapToken(TypeToken<K> keyToken, TypeToken<V> valueToken) {
@@ -64,4 +101,7 @@ public class ReflectionExplained {
                 .where(new TypeParameter<V>() {}, valueToken);
     }
 
+    private static void println(String describe, Object o) {
+        System.out.println(describe + ": " + o.toString());
+    }
 }
