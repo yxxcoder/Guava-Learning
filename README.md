@@ -59,3 +59,18 @@ Guava Cache：本地缓存实现，支持多种缓存过期策略
 ## 8. [区间[Ranges]](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch08_ranges)
 可比较类型的区间API，包括连续和离散类型
 
+
+## 9. [I/O](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch09_io)
+简化I/O尤其是I/O流和文件的操作，针对Java5和6版本
+
+
+## 10. [散列[Hash]](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch10_hashing)
+提供比Object.hashCode()更复杂的散列实现，并提供布鲁姆过滤器的实现
+
+
+## 11. [事件总线[EventBus]](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch11_event)
+发布-订阅模式的组件通信，但组件不需要显式地注册到其他组件中
+
+
+## 12. [数学运算[Math]](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch12_math)
+优化的、充分测试的数学工具类
