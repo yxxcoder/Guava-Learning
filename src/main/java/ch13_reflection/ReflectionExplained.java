@@ -92,6 +92,20 @@ public class ReflectionExplained {
         // supertype: java.util.Map<java.lang.String, java.math.BigInteger>
         println("supertype", supertype);
 
+        // 包含所有接口，子类和类是这个类型的类
+        TypeToken<Map<String, BigInteger>>.TypeSet typeSet = mapToken.getTypes();
+        // typeSet: [java.util.Map<java.lang.String, java.math.BigInteger>]
+        println("typeSet", typeSet);
+
+        // 检查某个类型是不是数组
+        boolean isArray = mapToken.isArray();
+        // isArray: false
+        println("isArray", isArray);
+
+        TypeToken<?> componentType = stringListTok.getComponentType();
+
+        println("componentType", componentType.toString());
+
 
     }
 
