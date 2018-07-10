@@ -1,5 +1,6 @@
 package ch13_reflection;
 
+import com.google.common.base.Function;
 import com.google.common.reflect.TypeParameter;
 import com.google.common.reflect.TypeToken;
 
@@ -105,6 +106,17 @@ public class ReflectionExplained {
         TypeToken<?> componentType = stringListTok.getComponentType();
 
         println("componentType", componentType.toString());
+
+
+        /**
+         * resolveType
+         */
+        TypeToken<Function<Integer, String>> funToken = new TypeToken<Function<Integer, String>>() {};
+
+        TypeToken<?> funResultToken = funToken.resolveType(Function.class.getTypeParameters()[1]);
+
+        println("funResultToken", funResultToken);
+
 
 
     }
