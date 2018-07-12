@@ -19,6 +19,26 @@ import static java.time.DayOfWeek.TUESDAY;
  **/
 public class CollectionUtilities {
 
+    public static void main(String[] args) {
+        // Iterables工具类
+        iterable();
+        // Lists工具类
+        lists();
+        // Sets工具类
+        sets();
+        // Maps工具类
+        maps();
+        // Multisets工具类
+        multisets();
+        // Multimaps工具类
+        multimaps();
+        // 包装器
+        wrappers();
+        // Tables工具类
+        table();
+
+    }
+
     /**
      * 静态工厂方法
      */
@@ -651,20 +671,6 @@ public class CollectionUtilities {
 
         Tables.unmodifiableRowSortedTable(TreeBasedTable.create());
     }
-
-    public static void main(String[] args) {
-        iterable();
-        lists();
-        sets();
-        maps();
-        multisets();
-        multimaps();
-        wrappers();
-        table();
-
-    }
-
-
 
 
 }
