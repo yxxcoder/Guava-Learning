@@ -10,7 +10,20 @@ import com.google.common.collect.ComparisonChain;
  * @create 2018-02-28 下午9:08
  **/
 public class ObjectExplained {
+
+    public static void main(String args[]) {
+        // equals
+        equalsMethod();
+        // hashCode
+        hashCodeMethod();
+        // toString
+        new ObjectExplained().toStringHelperMethod();
+        // 比较器 Comparator
+        new ObjectExplained().compare();
+    }
+
     /**
+     * equals
      * 使用Objects.equal帮助执行null敏感的equals判断，从而避免抛出NullPointerException
      * 注意：JDK7引入的Objects类提供了一样的方法Objects.equals
      */
@@ -27,6 +40,7 @@ public class ObjectExplained {
     }
 
     /**
+     * hashCode
      * 对传入的字段序列计算出合理的、顺序敏感的散列值
      * 可以使用Objects.hashCode(field1, field2, …, fieldn)来代替手动计算散列值
      * 注意：JDK7引入的Objects类提供了一样的方法Objects.hash(Object...)
@@ -45,14 +59,26 @@ public class ObjectExplained {
         String s1 = MoreObjects.toStringHelper(this)
                 .add("x", 1)
                 .toString();
+        // ObjectExplained{x=1}
         System.out.println(s1);
 
         // Returns "MyObject{x=1}"
         String s2 = MoreObjects.toStringHelper("MyObject")
                 .add("x", 1)
                 .toString();
+        // MyObject{x=1}
         System.out.println(s2);
 
+    }
+
+    /**
+     * 比较器[Comparator]
+     */
+    public void compare() {
+        Person a = new Person("a", 10);
+        Person b = new Person("a", 10);
+        // Returns 1
+        System.out.println(b.compareTo(a));
     }
 
     class Person implements Comparable<Person> {
@@ -74,19 +100,6 @@ public class ObjectExplained {
                     .compare(this.name, that.name)
                     .result();
         }
-    }
-    public void compare() {
-        Person a = new Person("a", 10);
-        Person b = new Person("a", 10);
-        // Returns 1
-        System.out.println(b.compareTo(a));
-    }
-
-    public static void main(String args[]) {
-        equalsMethod();
-        hashCodeMethod();
-        new ObjectExplained().toStringHelperMethod();
-        new ObjectExplained().compare();
     }
 
 }
