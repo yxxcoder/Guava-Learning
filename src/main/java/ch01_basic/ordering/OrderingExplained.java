@@ -17,6 +17,15 @@ import static com.google.common.collect.Ordering.usingToString;
  **/
 public class OrderingExplained {
 
+    public static void main(String args[]) {
+        // 创建排序器
+        creationMethod();
+        // 链式调用方法
+        chainingMethod();
+        // 运用排序器
+        applicationMethod();
+    }
+
     static List<People> peopleList = Lists.newArrayList(
             new People("peter", 8),
             new People("jerry", 9),
@@ -153,11 +162,5 @@ public class OrderingExplained {
         // 返回迭代器中最大的元素。如果可迭代对象中没有元素，则抛出NoSuchElementException
         System.out.println("max:" + natural().max(list));
 
-    }
-
-    public static void main(String args[]) {
-        creationMethod();
-        chainingMethod();
-        applicationMethod();
     }
 }
