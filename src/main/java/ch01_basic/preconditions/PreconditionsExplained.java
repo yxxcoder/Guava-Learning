@@ -10,6 +10,11 @@ import static com.google.common.base.Preconditions.*;
  **/
 public class PreconditionsExplained {
 
+    public static void main(String args[]) {
+        // 前置条件
+        preconditions();
+    }
+
     /**
      * Guava在Preconditions类中提供了若干前置条件判断的实用方法，每个方法都有三个变种：
      * 没有额外参数：抛出的异常中没有错误消息；
@@ -81,10 +86,6 @@ public class PreconditionsExplained {
          * 检查失败时抛出 IndexOutOfBoundsException
          */
         checkPositionIndexes(0, 3, 3);
-    }
-
-    public static void main(String args[]) {
-        preconditions();
     }
 
 }
