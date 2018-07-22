@@ -13,6 +13,8 @@ public class PreconditionsExplained {
     public static void main(String args[]) {
         // 前置条件
         preconditions();
+        // 使用示例
+        // example();
     }
 
     /**
