@@ -117,6 +117,12 @@ public class ReflectionExplained {
 
         println("funResultToken", funResultToken);
 
+        try {
+            TypeToken<?> entrySetToken = funToken.resolveType(Map.class.getMethod("entrySet").getGenericReturnType());
+            println("entrySetToken", entrySetToken);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
 
 
     }
