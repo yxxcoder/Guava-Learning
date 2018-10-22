@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.reflect.TypeParameter;
 import com.google.common.reflect.TypeToken;
 
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.util.*;
@@ -127,6 +128,8 @@ public class ReflectionExplained {
         /**
          * Invokable
          */
+//        Modifier.isPublic(method.getModifiers();
+//        invokable.isPublic()
 
     }
 
