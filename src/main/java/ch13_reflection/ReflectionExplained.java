@@ -130,7 +130,15 @@ public class ReflectionExplained {
          */
 //        Modifier.isPublic(method.getModifiers();
 //        invokable.isPublic()
+//        !(Modifier.isPrivate(method.getModifiers()) || Modifier.isPublic(method.getModifiers()))
+//        invokable.isPackagePrivate()
 
+        // 方法是否能够被子类重写
+//        !(Modifier.isFinal(method.getModifiers())
+//                || Modifiers.isPrivate(method.getModifiers())
+//                || Modifiers.isStatic(method.getModifiers())
+//                || Modifiers.isFinal(method.getDeclaringClass().getModifiers()))
+//        invokable.isOverridable()
     }
 
     private static <K, V> TypeToken<Map<K, V>> mapToken(TypeToken<K> keyToken, TypeToken<V> valueToken) {
