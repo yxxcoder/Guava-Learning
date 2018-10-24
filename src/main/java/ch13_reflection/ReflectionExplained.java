@@ -139,6 +139,15 @@ public class ReflectionExplained {
 //                || Modifiers.isStatic(method.getModifiers())
 //                || Modifiers.isFinal(method.getDeclaringClass().getModifiers()))
 //        invokable.isOverridable()
+
+//        for (Annotation annotation : method.getParameterAnnotations[0]) {
+//            if (annotation instanceof Nullable) {
+//                return true;
+//            }
+//        }
+//        return false;
+
+//        invokable.getParameters().get(0).isAnnotationPresent(Nullable.class)
     }
 
     private static <K, V> TypeToken<Map<K, V>> mapToken(TypeToken<K> keyToken, TypeToken<V> valueToken) {
