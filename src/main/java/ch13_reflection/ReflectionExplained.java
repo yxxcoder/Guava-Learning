@@ -148,6 +148,13 @@ public class ReflectionExplained {
 //        return false;
 
 //        invokable.getParameters().get(0).isAnnotationPresent(Nullable.class)
+
+//        invokable.isPublic();
+//        invokable.getParameters();
+//        invokable.invoke(object, args);
+//
+//        Invokable<List<String>, ?> invokable = new TypeToken<List<String>>()        {}.method(getMethod);
+//        invokable.getReturnType(); // String.class
     }
 
     private static <K, V> TypeToken<Map<K, V>> mapToken(TypeToken<K> keyToken, TypeToken<V> valueToken) {
