@@ -1,13 +1,17 @@
 package ch13_reflection;
 
 import com.google.common.base.Function;
-import com.google.common.reflect.TypeParameter;
-import com.google.common.reflect.TypeToken;
+import com.google.common.reflect.*;
 
-import java.lang.reflect.Modifier;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.TreeMap;
 
 /**
  * Guava 的 Java 反射机制工具类
@@ -155,6 +159,65 @@ public class ReflectionExplained {
 //
 //        Invokable<List<String>, ?> invokable = new TypeToken<List<String>>()        {}.method(getMethod);
 //        invokable.getReturnType(); // String.class
+
+
+        /**
+         * Dynamic Proxies
+         */
+
+        // JDK 实现
+        Subject subject = new SubjectImpl();
+        Subject subjectProxy = (Subject) Proxy.newProxyInstance(
+                subject.getClass().getClassLoader(),
+                subject.getClass().getInterfaces(),
+                new ProxyInvocationHandler(subject));
+        subjectProxy.sayHi();
+
+        // Guava 实现
+        Subject subjectProxy2 = Reflection.newProxy(Subject.class, new ProxyInvocationHandler(subject));
+        subjectProxy2.sayHi();
+
+
+        // AbstractInvocationHandler
+        // 能够更直观的支持equals()，hashCode()和toString()
+        // 确保传递给 handleInvocation(Object, Method, Object[])) 的参数数组永远不会空，从而减少了空指针异常的机会
+        class ProxyInvocationHandler2 extends AbstractInvocationHandler {
+            private Subject target;
+
+            public ProxyInvocationHandler2(Subject target) {
+                this.target = target;
+            }
+
+            @Override
+            protected Object handleInvocation(Object proxy, Method method, Object[] args) throws Throwable {
+                System.out.print("say:");
+                return method.invoke(target, args);
+            }
+        }
+
+
+        /**
+         * ClassPath
+         * ClassPath是一种实用工具，它提供尽最大努力的类路径扫描
+         */
+        // scans the class path used by classloader
+//        ClassPath classpath = ClassPath.from(classloader);
+//        for (ClassPath.ClassInfo classInfo : classpath.getTopLevelClasses("com.mycomp.mypackage")) {
+//            // do something...
+//        }
+
+        // ClassInfo是被加载类的句柄。它允许程序员去检查类的名字和包的名字，让类直到需要的时候才被加载
+        // ClassPath是一个尽力而为的工具。只扫描jar文件中或者某个文件目录下的class文件
+        // 也不能扫描非URLClassLoader的自定义class loader管理的class，所以不要将它用于关键任务生产任务
+
+
+        /**
+         * Class Loading
+         * 能够确保特定的类被初始化——执行任何静态初始化
+         * 使用这种方法的是一个代码异味，因为静态伤害系统的可维护性和可测试性
+         * 但在有些情况下，别无选择，这一方法有助于保持代码不那么丑
+         */
+        Reflection.initialize(SubjectImpl.class);
     }
 
     private static <K, V> TypeToken<Map<K, V>> mapToken(TypeToken<K> keyToken, TypeToken<V> valueToken) {
@@ -165,5 +228,30 @@ public class ReflectionExplained {
 
     private static void println(String describe, Object o) {
         System.out.println(describe + ": " + o.toString());
+    }
+
+    interface Subject {
+        void sayHi();
+    }
+
+    static class SubjectImpl implements Subject {
+        @Override
+        public void sayHi() {
+            System.out.println("hi");
+        }
+    }
+
+    static class ProxyInvocationHandler implements InvocationHandler {
+        private Subject target;
+
+        public ProxyInvocationHandler(Subject target) {
+            this.target = target;
+        }
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            System.out.print("say:");
+            return method.invoke(target, args);
+        }
     }
 }

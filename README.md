@@ -77,6 +77,6 @@ Guava Cache：本地缓存实现，支持多种缓存过期策略
 
 
 ## 13. [反射[Reflection]](https://github.com/yxxcoder/Guava-Learning/tree/master/src/main/java/ch13_reflection)
-优化的、充分测试的数学工具类
+Guava 的 Java 反射机制工具类
 
 
